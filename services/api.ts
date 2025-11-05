@@ -8,7 +8,8 @@
     AdminCategory,      
     AdminProductDetail, 
     AdminProductSummary,
-    AdminProductPrice,   
+    AdminProductPrice,
+    CatalogoInicial,   
     } from '../types';
 
 
@@ -242,113 +243,75 @@
     };
 
 
-    // SECCIÓN 5: API PÚBLICA - CATÁLOGO (para clientes)
-    // Estas funciones son las que usa el catálogo para el cliente
 
-    /**
-     * Obtiene todas las categorías activas
-     * Endpoint: GET /api/Categorias
-     * Usado en: DataContext (se carga al inicio de la app)
-     */
-    export const fetchCategories = async (): Promise<Category[]> => {
-        try {
-            // Llamar a la API
-            const apiCategories = await apiRequest<any[]>('/api/Categorias');
-            // Filtrar solo las categorías activas y mapearlas al formato frontend
-            return apiCategories.filter(cat => cat.activo).map(mapApiCategory);
-        } catch (error) {
-            console.warn("Fallo al conectar los productos, se conectan los datos de prueba.", error);
-            // Si falla, usar datos de prueba
-            if (USE_MOCK_DATA_ON_FAIL) {
-                return MOCK_CATEGORIES;
-            }
-            throw error; // Si no hay fallback, propagar el error
+// SECCIÓN 5: API PÚBLICA - CATÁLOGO (para clientes)
+// ⚡ OPTIMIZADO: Una sola petición trae todo el catálogo
+
+/**
+ * ✨ NUEVO: Obtiene el catálogo inicial completo en una sola petición
+ * Endpoint: GET /api/Catalogo/inicial
+ * Usado en: DataContext (se carga al inicio de la app)
+ * 
+ * Retorna:
+ * - Todas las categorías activas
+ * - Todos los productos activos (con solo el slug de su categoría)
+ * - Productos de temporada
+ * 
+ * El frontend resuelve las relaciones en memoria (más rápido que HTTP)
+ */
+export const fetchInitialCatalog = async (): Promise<CatalogoInicial> => {
+    try {
+        // Una sola petición HTTP trae todo
+        const apiData = await apiRequest<any>('/api/Catalogo/inicial');
+        
+        // Mapear categorías
+        const categories = apiData.categorias
+            .filter((cat: any) => cat.activo)
+            .map(mapApiCategory);
+        
+        // Mapear productos (usa categoriaSlug, no el objeto completo)
+        const products = apiData.productos.map((p: any) => ({
+            id: p.slug,
+            name: p.nombre,
+            description: p.descripcion,
+            image: getImageUrl(p.imagenUrl),
+            category: p.categoriaSlug, // ⚡ Solo el slug (ligero)
+            prices: (p.productoPrecios || []).map(mapApiProductPrice),
+            seasonal: p.esDeTemporada,
+            featured: p.esDestacado || false,
+        }));
+        
+        // Productos de temporada (ya vienen filtrados del backend)
+        const seasonal = apiData.temporada.map((p: any) => ({
+            id: p.slug,
+            name: p.nombre,
+            description: p.descripcion,
+            image: getImageUrl(p.imagenUrl),
+            category: p.categoriaSlug,
+            prices: (p.productoPrecios || []).map(mapApiProductPrice),
+            seasonal: true,
+            featured: p.esDestacado || false,
+        }));
+        
+        return {
+            categories,
+            products,
+            seasonal,
+        };
+    } catch (error) {
+        console.warn("Fallo al conectar el catálogo inicial, se conectan los datos de prueba.", error);
+        // Si falla, usar datos de prueba
+        if (USE_MOCK_DATA_ON_FAIL) {
+            return {
+                categories: MOCK_CATEGORIES,
+                products: MOCK_PRODUCTS,
+                seasonal: MOCK_PRODUCTS.filter(p => p.seasonal),
+            };
         }
-    };
+        throw error;
+    }
+};
 
-    /**
-     * Obtiene productos de temporada
-     * Endpoint: GET /api/Catalogo/temporada
-     * Usado en: HomePage (sección "Lo más popular")
-     */
-    export const fetchSeasonalProducts = async (): Promise<Product[]> => {
-        try {
-            const apiProducts = await apiRequest<any[]>('/api/Catalogo/temporada');
-            // Mapear todos los productos
-            // Se les asigna la categoría 'temporada' automáticamente
-            return apiProducts.map(p => mapApiProductSummary(p, 'temporada'));
-        } catch (error) {
-            console.warn("Fallo al conectar los productos, se conectan los datos de prueba.", error);
-            if (USE_MOCK_DATA_ON_FAIL) {
-                // Devolver solo los productos marcados como 'seasonal'
-                return MOCK_PRODUCTS.filter(p => p.seasonal);
-            }
-            throw error;
-        }
-    };
-
-    /**
-     * Obtiene productos de una categoría específica
-     * Endpoint: GET /api/Catalogo/categoria/{slug}
-     * Usado en: CategoryPage (cuando visitas /category/pasteles)
-     * @param slug - Identificador de la categoría (ej: 'pasteles', 'galletas')
-     */
-    export const fetchProductsByCategory = async (slug: string): Promise<Product[]> => {
-        try {
-            const apiProducts = await apiRequest<any[]>(`/api/Catalogo/categoria/${slug}`);
-            // Mapear productos y asignarles el slug de la categoría
-            return apiProducts.map(p => mapApiProductSummary(p, slug));
-        } catch (error) {
-            console.warn(`Error al llamar productos de categoría ${slug}, se llaman productos de prueba.`, error);
-            if (USE_MOCK_DATA_ON_FAIL) {
-                // Filtrar productos de ejemplo que pertenezcan a esta categoría
-                return MOCK_PRODUCTS.filter(p => p.category === slug);
-            }
-            throw error;
-        }
-    };
-
-    /**
-     * Obtiene el detalle completo de un producto
-     * Endpoint: GET /api/Catalogo/producto/{slug}
-     * Usado en: ProductDetailPage (cuando visitas /product/pastel-chocolate)
-     * @param slug - Identificador del producto
-     * @returns Objeto con el producto Y su categoría completa
-     */
-    export const fetchProductBySlug = async (slug: string): Promise<{ product: Product; category: Category }> => {
-        try {
-            const apiProduct = await apiRequest<any>(`/api/Catalogo/producto/${slug}`);
-
-            // Validar que vino algo
-            if (!apiProduct) {
-                throw new Error(`Error al llamar Producto '${slug}' fallo.`);
-            }
-
-            // Mapear el producto completo
-            const product = mapApiProductDetail(apiProduct);
-            // Mapear la categoría del producto
-            const category = mapApiCategory(apiProduct.categoria);
-            
-            return { product, category };
-        } catch (error) {
-            console.warn(`API call for product ${slug} failed, falling back to mock data.`, error);
-            if (USE_MOCK_DATA_ON_FAIL) {
-                // Buscar el producto en los datos de prueba
-                const product = MOCK_PRODUCTS.find(p => p.id === slug);
-                if (!product) {
-                    throw new Error(`Mock product with slug '${slug}' not found.`);
-                }
-                // Buscar su categoría
-                const category = MOCK_CATEGORIES.find(c => c.slug === product.category);
-                
-                return { 
-                    product, 
-                    category: category || { slug: '', name: 'Sin categoría', description: '', image: '', icon: 'help' } 
-                };
-            }
-            throw error;
-        }
-    };
 
 
     // SECCIÓN 6: API DE ADMINISTRACIÓN - CATEGORÍAS

@@ -1,15 +1,15 @@
 // Página principal del catálogo público de la pastelería.
 // Incluye: Hero, productos populares (carrusel), categorías,
 // historia, testimonios y llamado a la acción.
-// Es el componente público más complejo y completo.
+// Es el componente público más completo y complejo.
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { TESTIMONIALS } from '../constants'; // Datos de testimonios (datos estáticos)
 import { Testimonial, Product } from '../types';
-import { useData } from '../context/DataContext'; // Para obtener categorías
-import { fetchSeasonalProducts } from '../services/api'; // Para obtener productos de temporada
+import { useData } from '../context/DataContext'; // Para obtener categorías y productos
+// ⚠️ YA NO SE IMPORTA fetchSeasonalProducts
 import ProductCard from './ProductCard'; // Componente reutilizable
 import CategoryCard from './CategoryCard'; // Componente reutilizable
 
@@ -80,15 +80,11 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
 // COMPONENTE PRINCIPAL
 const HomePage: React.FC = () => {
     // ESTADOS DEL COMPONENTE
-    // se carga productos de temporada
-    const [popularProducts, setPopularProducts] = useState<Product[]>([]);
+    // ⚠️ YA NO se carga productos de temporada con useState
+    // ⚠️ YA NO hay loadingPopular
     
-    // carga para productos de temporada
-    // este es aparte de las categorías porque son diferentes cargas
-    const [loadingPopular, setLoadingPopular] = useState(true);
-    
-    // las categorías ya están cargadas al inicio de la app
-    const { categories, loading: loadingCategories } = useData();
+    // ⚡ NUEVO: Obtener todo desde el contexto (ya cargado al inicio)
+    const { categories, seasonalProducts, loading: loadingCategories } = useData();
 
     // REFS Y ESTADOS PARA EL CARRUSEL AUTOMÁTICO
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -111,32 +107,16 @@ const HomePage: React.FC = () => {
     // Opacidad para oscurecer el overlay al hacer scroll
     const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]); 
 
-    // CARGAR PRODUCTOS POPULARES AL INICIAR
-    // se ejecuta una vez en dependencias
-    // se llama a la api y se guardan los productos
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                setLoadingPopular(true);
-                const products = await fetchSeasonalProducts();
-                setPopularProducts(products);
-            } catch (error) {
-                console.error("Failed to fetch popular products", error);
-            } finally {
-                setLoadingPopular(false);
-            }
-        };
-        loadData();
-    }, []); // Array vacío al iniciar
 
     // AUTO-PLAY DEL CARRUSEL
+    // Usa seasonalProducts en lugar de popularProducts
     useEffect(() => {
         // Solo auto-play si hay productos y está activado
-        if (isAutoPlaying && popularProducts.length > 0) {
+        if (isAutoPlaying && seasonalProducts.length > 0) {
             autoPlayInterval.current = setInterval(() => {
                 setDirection(1); // Dirección derecha
                 setCurrentIndex((prevIndex) => 
-                    prevIndex + 1 >= popularProducts.length ? 0 : prevIndex + 1
+                    prevIndex + 1 >= seasonalProducts.length ? 0 : prevIndex + 1
                 );
             }, 4000); // Cada 4 segundos
 
@@ -146,13 +126,14 @@ const HomePage: React.FC = () => {
                 }
             };
         }
-    }, [isAutoPlaying, popularProducts.length]);
+    }, [isAutoPlaying, seasonalProducts.length]);
 
     // FUNCIONES DE NAVEGACIÓN
+    // ⚡ ACTUALIZADO: Usa seasonalProducts en lugar de popularProducts
     const goToNext = () => {
         setDirection(1);
         setCurrentIndex((prevIndex) => 
-            prevIndex + 1 >= popularProducts.length ? 0 : prevIndex + 1
+            prevIndex + 1 >= seasonalProducts.length ? 0 : prevIndex + 1
         );
         // Reinicia el auto-play
         pauseAutoPlay();
@@ -162,7 +143,7 @@ const HomePage: React.FC = () => {
     const goToPrev = () => {
         setDirection(-1);
         setCurrentIndex((prevIndex) => 
-            prevIndex - 1 < 0 ? popularProducts.length - 1 : prevIndex - 1
+            prevIndex - 1 < 0 ? seasonalProducts.length - 1 : prevIndex - 1
         );
         // Reinicia el auto-play
         pauseAutoPlay();
@@ -189,15 +170,16 @@ const HomePage: React.FC = () => {
 
     // OBTENER PRODUCTOS VISIBLES
     // Desktop: 4 productos | Móvil: 1 producto
+    // ⚡ ACTUALIZADO: Usa seasonalProducts en lugar de popularProducts
     const getVisibleProducts = (isMobile: boolean) => {
-        if (popularProducts.length === 0) return [];
+        if (seasonalProducts.length === 0) return [];
         
         const itemsToShow = isMobile ? 1 : 4;
         const visibleProducts = [];
         
         for (let i = 0; i < itemsToShow; i++) {
-            const index = (currentIndex + i) % popularProducts.length;
-            visibleProducts.push(popularProducts[index]);
+            const index = (currentIndex + i) % seasonalProducts.length;
+            visibleProducts.push(seasonalProducts[index]);
         }
         
         return visibleProducts;
@@ -221,9 +203,10 @@ const HomePage: React.FC = () => {
 
     // FUNCIÓN: RENDERIZAR LISTA DE PRODUCTOS CON ESTADOS
     // renderiza la lista según estado
+    // ⚡ ACTUALIZADO: Usa loadingCategories y seasonalProducts
     const renderCarousel = () => {
-        // Mostrar skeletons
-        if (loadingPopular) {
+        // Mostrar skeletons mientras carga el catálogo completo
+        if (loadingCategories) {
             // Array.from({ length: 4 }) crea array de 4 elementos undefined
             // Se mapea para crear 4 skeletons
             return (
@@ -255,8 +238,8 @@ const HomePage: React.FC = () => {
             );
         }
 
-        // Si no se puede conectar con los productos entonces se muestra mensaje
-        if (popularProducts.length === 0) {
+        // Si no hay productos de temporada entonces se muestra mensaje
+        if (seasonalProducts.length === 0) {
             return (
                 <div className="text-center py-10">
                     <p className="text-text-secondary">
@@ -430,7 +413,8 @@ const HomePage: React.FC = () => {
                     </div>
                     
                     {/* Botones de navegación */}
-                    {!loadingPopular && popularProducts.length > 0 && (
+                    {/* ⚡ ACTUALIZADO: Usa loadingCategories y seasonalProducts */}
+                    {!loadingCategories && seasonalProducts.length > 0 && (
                         <>
                             <motion.button
                                 onClick={goToPrev}
@@ -459,9 +443,10 @@ const HomePage: React.FC = () => {
                     )}
                     
                     {/* Indicadores (puntos) */}
-                    {!loadingPopular && popularProducts.length > 0 && (
+                    {/* ⚡ ACTUALIZADO: Usa loadingCategories y seasonalProducts */}
+                    {!loadingCategories && seasonalProducts.length > 0 && (
                         <div className="flex justify-center gap-2 mt-8">
-                            {popularProducts.map((_, index) => (
+                            {seasonalProducts.map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => goToSlide(index)}
@@ -665,15 +650,33 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-/*
-7. ANIMACIONES MÁS SOFISTICADAS
-    - Framer Motion en lugar de AOS
-    - Parallax scrolling en hero
-    - Micro-interactions en hover
 
-8. HERO DINÁMICO
-    - Carrusel de imágenes en el hero
-    - Videos de fondo
-    - Contenido personalizado según hora del día
+/* ===== OPTIMIZACIONES IMPLEMENTADAS =====
+
+✅ ELIMINADO:
+1. import fetchSeasonalProducts
+2. useState para popularProducts
+3. useState para loadingPopular
+4. useEffect completo que cargaba productos
+
+✅ AGREGADO:
+1. seasonalProducts desde useData()
+2. Uso de loadingCategories para todos los skeletons
+
+✅ ACTUALIZADO:
+1. Todas las referencias popularProducts → seasonalProducts
+2. Todas las referencias loadingPopular → loadingCategories
+3. useEffect de auto-play ahora usa seasonalProducts.length
+4. Funciones goToNext/goToPrev usan seasonalProducts.length
+5. getVisibleProducts usa seasonalProducts
+6. renderCarousel usa loadingCategories y seasonalProducts
+7. Botones de navegación usan loadingCategories y seasonalProducts
+8. Indicadores de puntos usan seasonalProducts
+
+✅ RESULTADO:
+- HomePage ya NO hace peticiones HTTP
+- Los productos de temporada vienen pre-cargados
+- Carrusel funciona instantáneamente
+- Sin delays ni loading adicional
 
 */

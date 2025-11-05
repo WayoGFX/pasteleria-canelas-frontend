@@ -1,4 +1,3 @@
-
 // TIPOS PARA EL CATÁLOGO PÚBLICO (lo que ven los clientes)
 
 export type CategorySlug = string;
@@ -17,7 +16,7 @@ export interface Product {
   image: string;
   category: CategorySlug; // Slug de la categoría a la que pertenece
   prices: ProductPrice[]; // Array de precios (puede tener 1 o más o ninguno)
-  featured?: boolean; // para desctacar productos
+  featured?: boolean; // para destacar productos
   seasonal?: boolean; //es producto de temporada
 }
 
@@ -28,6 +27,15 @@ export interface Category {
     description: string;
     image: string; // url de la imagen
     icon: string; 
+}
+
+// ✨ NUEVO: Tipo para el catálogo inicial optimizado
+// Este tipo representa la respuesta del endpoint /api/Catalogo/inicial
+// Contiene todo lo necesario para cargar el catálogo en una sola petición
+export interface CatalogoInicial {
+  categories: Category[];   // Todas las categorías activas
+  products: Product[];       // Todos los productos activos
+  seasonal: Product[];       // Productos de temporada (subconjunto de products)
 }
 
 // TIPOS PARA EL CARRITO DE COMPRAS
@@ -153,6 +161,3 @@ export interface AdminProductDetail {
     esDeTemporada: boolean;
     productoPrecios: AdminProductPrice[];
 }
-
-
-// EJEMPLO en uso del código
