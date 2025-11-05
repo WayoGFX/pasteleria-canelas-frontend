@@ -1,0 +1,5 @@
+{
+  "name": "Canela - Catálogo de Pastelería",
+  "description": "Un catálogo web para la pastelería Canela que muestra productos por categorías. Los clientes pueden seleccionar productos y enviar su pedido a través de un mensaje predefinido de WhatsApp.",
+  "requestFramePermissions": []
+}

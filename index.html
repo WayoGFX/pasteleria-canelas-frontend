@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Canela - Catálogo de Pastelería</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#fdfbf8',       /* Blanco Crema (Fondo) */
+            'secondary': '#9A6A4D',     /* Caramelo Intenso (Marca) */
+            'accent': '#E1BBAA',        /* Rosa Tostado (Acento) */
+            'text-primary': '#432818',    /* Chocolate Amargo (Texto Principal) */
+            'text-secondary': '#A98C7A',  /* Marrón Suave (Texto Secundario) */
+            'card-bg': '#FFFCFA',         /* Blanco Alabastro (Tarjetas) */
+          },
+          fontFamily: {
+            'sans': ['Epilogue', 'sans-serif'],
+            'serif-display': ['Playfair Display', 'serif'],
+          },
+          animation: {
+            fadeIn: 'fadeIn 0.7s ease-out forwards',
+            jiggle: 'jiggle 0.6s ease-in-out',
+            subtlePop: 'subtlePop 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(15px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            jiggle: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '25%': { transform: 'scale(1.2) rotate(-3deg)' },
+              '75%': { transform: 'scale(1.2) rotate(3deg)' },
+            },
+            subtlePop: {
+              '0%': { transform: 'scale(0.95)', opacity: '0.7' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            },
+          },
+          boxShadow: {
+            'glow-secondary': '0 4px 20px 0 rgba(154, 106, 77, 0.3)',
+            'glow-accent': '0 4px 20px 0 rgba(225, 187, 170, 0.4)',
+          }
+        }
+      }
+    }
+    </script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.3"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-primary text-text-primary antialiased">
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
