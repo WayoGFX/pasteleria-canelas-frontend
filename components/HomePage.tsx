@@ -386,7 +386,7 @@ const HomePage: React.FC = () => {
                             viewport={viewportConfig}
                             transition={{ delay: 0.2 }}
                         >
-                            ⭐ Temporada
+                            Temporada
                         </motion.span>
                         
                         <h2 className="font-serif-display text-4xl md:text-5xl font-bold text-text-primary mb-2">

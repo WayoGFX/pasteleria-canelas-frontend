@@ -64,7 +64,10 @@ const CategoryListPage: React.FC = () => {
                     + Crear Nueva
                 </Link>
             </div>
-
+            <div className="md:hidden bg-blue-50 border-b border-blue-200 px-4 py-2 text-xs text-blue-700 flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">swipe</span>
+                    Desliza para ver más columnas
+            </div>
             {loading && <p>Cargando categorías...</p>}
             {error && <p className="text-red-500">{error}</p>}
             
