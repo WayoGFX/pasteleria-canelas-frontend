@@ -5,6 +5,7 @@ dist-ssr
 
 # Archivos de Variables de Entorno
 .env
+.env.production
 *.local
 
 # Logs
