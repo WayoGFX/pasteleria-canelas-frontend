@@ -1,19 +1,16 @@
-// Página principal del catálogo público de la pastelería.
-// Incluye: Hero, productos populares (carrusel), categorías,
-// historia, testimonios y llamado a la acción.
-// Es el componente público más completo y complejo.
+// Página principal del catálogo
+// Incluye el Hero, productos populares carrusel, categorías, historia, testimonios y llamado a la acción
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { TESTIMONIALS } from '../constants'; // Datos de testimonios (datos estáticos)
+import { TESTIMONIALS } from '../constants'; // datos de testimonios
 import { Testimonial, Product } from '../types';
-import { useData } from '../context/DataContext'; // Para obtener categorías y productos
-// ⚠️ YA NO SE IMPORTA fetchSeasonalProducts
-import ProductCard from './ProductCard'; // Componente reutilizable
-import CategoryCard from './CategoryCard'; // Componente reutilizable
+import { useData } from '../context/DataContext'; // para obtener categorías y productos
+import ProductCard from './ProductCard'; // componente reutilizable
+import CategoryCard from './CategoryCard'; // componente reutilizable
 
-// Importar variantes de animación
+// importar variantes de animación
 import {
     fadeInUp,
     fadeInLeft,
@@ -29,9 +26,8 @@ import {
     scaleUp
 } from '../utils/animations';
 
-// ===== COMPONENTE: TARJETA DE TESTIMONIO ANIMADA =====
-// Componente de testimonios
-// es reutilizable
+// COMPONENTE TARJETA DE TESTIMONIO ANIMADA
+// componente de testimonios
 const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }) => {
     
     const renderStars = () => {
@@ -59,17 +55,17 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
     return (
         <motion.div 
             className="bg-card-bg p-6 rounded-2xl shadow-lg flex flex-col h-full"
-            variants={fadeInUp} // Animación de entrada al aparecer en la vista
-            whileHover={hoverLift} // Micro-interaction de elevación al hacer hover
+            variants={fadeInUp}
+            whileHover={hoverLift}
             whileTap={tapScale}
         >
-            {/* Estrellas de valor*/}
+            {/* estrellas de valor*/}
             <div className="flex mb-3">{renderStars()}</div> 
-            {/* Testimonio */}
+            {/* testimonio */}
             <p className="text-text-secondary italic mb-4 flex-grow"> 
                 "{testimonial.quote}"
             </p>
-            {/* Nombre */}
+            {/* nombre */}
             <p className="font-bold text-right text-text-primary"> 
                 — {testimonial.author}
             </p>
@@ -80,19 +76,16 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
 // COMPONENTE PRINCIPAL
 const HomePage: React.FC = () => {
     // ESTADOS DEL COMPONENTE
-    // ⚠️ YA NO se carga productos de temporada con useState
-    // ⚠️ YA NO hay loadingPopular
-    
-    // ⚡ NUEVO: Obtener todo desde el contexto (ya cargado al inicio)
+    // obtener todo desde el contexto ya cargado al inicio
     const { categories, seasonalProducts, loading: loadingCategories } = useData();
 
-    // REFS Y ESTADOS PARA EL CARRUSEL AUTOMÁTICO
+    // estados de carrusel automático
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-    const [direction, setDirection] = useState(0); // 1 = derecha, -1 = izquierda
+    const [direction, setDirection] = useState(0); // 1 derecha y  -1 izquierda
     const autoPlayInterval = useRef<NodeJS.Timeout | null>(null);
 
-    // PARALLAX LIMITADO (SOLO HERO)
+    // PARALLAX
     // useRef es para permitir acceso al dom
     const heroRef = useRef<HTMLDivElement>(null);
     
@@ -102,9 +95,9 @@ const HomePage: React.FC = () => {
         offset: ["start start", "end start"]
     });
     
-    // Parallax scrolling en hero (mueve la imagen de fondo)
+    // Parallax scrolling en hero
     const heroY = useTransform(scrollY, [0, 500], [0, 150]); 
-    // Opacidad para oscurecer el overlay al hacer scroll
+    // oscurecer
     const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]); 
 
 
@@ -129,13 +122,13 @@ const HomePage: React.FC = () => {
     }, [isAutoPlaying, seasonalProducts.length]);
 
     // FUNCIONES DE NAVEGACIÓN
-    // ⚡ ACTUALIZADO: Usa seasonalProducts en lugar de popularProducts
+    // seasonalProducts
     const goToNext = () => {
         setDirection(1);
         setCurrentIndex((prevIndex) => 
             prevIndex + 1 >= seasonalProducts.length ? 0 : prevIndex + 1
         );
-        // Reinicia el auto-play
+        // reinicia el -play
         pauseAutoPlay();
         resumeAutoPlay();
     };
@@ -145,7 +138,7 @@ const HomePage: React.FC = () => {
         setCurrentIndex((prevIndex) => 
             prevIndex - 1 < 0 ? seasonalProducts.length - 1 : prevIndex - 1
         );
-        // Reinicia el auto-play
+        // reinicia el auto-play
         pauseAutoPlay();
         resumeAutoPlay();
     };
@@ -168,9 +161,8 @@ const HomePage: React.FC = () => {
         setTimeout(() => setIsAutoPlaying(true), 1000); // Resume después de 1 segundo
     };
 
-    // OBTENER PRODUCTOS VISIBLES
-    // Desktop: 4 productos | Móvil: 1 producto
-    // ⚡ ACTUALIZADO: Usa seasonalProducts en lugar de popularProducts
+    // PRODUCTOS VISIBLES
+    // 4 productos
     const getVisibleProducts = (isMobile: boolean) => {
         if (seasonalProducts.length === 0) return [];
         
@@ -185,7 +177,7 @@ const HomePage: React.FC = () => {
         return visibleProducts;
     };
 
-    // VARIANTES DE ANIMACIÓN PARA EL CARRUSEL
+    // VARIANTES DE ANIMACIÓN
     const carouselVariants = {
         enter: (direction: number) => ({
             x: direction > 0 ? 300 : -300,
@@ -201,31 +193,23 @@ const HomePage: React.FC = () => {
         })
     };
 
-    // FUNCIÓN: RENDERIZAR LISTA DE PRODUCTOS CON ESTADOS
-    // renderiza la lista según estado
-    // ⚡ ACTUALIZADO: Usa loadingCategories y seasonalProducts
+    // RENDERIZAR LISTA DE PRODUCTOS CON ESTADOS
     const renderCarousel = () => {
-        // Mostrar skeletons mientras carga el catálogo completo
+        // mostrar skeletons
         if (loadingCategories) {
-            // Array.from({ length: 4 }) crea array de 4 elementos undefined
-            // Se mapea para crear 4 skeletons
             return (
                 <div className="flex gap-6 justify-center">
                     {Array.from({ length: 4 }).map((_, index) => (
                         <div key={`skel-${index}`} className="w-64 md:w-72 shrink-0 hidden md:block">
                             <div className="animate-pulse">
-                                {/* imagen cuadrada */}
                                 <div className="aspect-square w-full bg-gray-200 rounded-2xl"></div> 
-                                {/* título */}
                                 <div className="h-4 bg-gray-200 rounded mt-3 w-3/4"></div> 
-                                {/* subtítulo */}
                                 <div className="h-4 bg-gray-200 rounded mt-2 w-1/2"></div> 
-                                {/* botón*/}
                                 <div className="h-10 bg-gray-200 rounded-full mt-3"></div> 
                             </div>
                         </div>
                     ))}
-                    {/* Skeleton móvil */}
+                    {/* Skeleton movils */}
                     <div className="w-64 md:hidden">
                         <div className="animate-pulse">
                             <div className="aspect-square w-full bg-gray-200 rounded-2xl"></div>
@@ -238,7 +222,7 @@ const HomePage: React.FC = () => {
             );
         }
 
-        // Si no hay productos de temporada entonces se muestra mensaje
+        // si no hay productos de temporada entonces se muestra mensaje
         if (seasonalProducts.length === 0) {
             return (
                 <div className="text-center py-10">
@@ -249,10 +233,10 @@ const HomePage: React.FC = () => {
             );
         }
 
-        // Mostrar tarjetas de producto
+        // tarjetas de producto
         return (
             <>
-                {/* DESKTOP: 4 productos visibles */}
+                {/*4 productos*/}
                 <div className="hidden md:flex gap-6 justify-center overflow-hidden">
                     <AnimatePresence mode="wait" custom={direction}>
                         <motion.div
@@ -270,7 +254,7 @@ const HomePage: React.FC = () => {
                         >
                             {getVisibleProducts(false).map((product) => (
                                 <div key={product.id} className="w-64 md:w-72 shrink-0">
-                                    {/* ProductCard es un componente*/}
+                                    {/* componente de productos*/}
                                     <ProductCard product={product} /> 
                                 </div>
                             ))}
@@ -278,7 +262,7 @@ const HomePage: React.FC = () => {
                     </AnimatePresence>
                 </div>
 
-                {/* MÓVIL: 1 producto visible */}
+                {/* 1 producto */}
                 <div className="md:hidden flex justify-center overflow-hidden">
                     <AnimatePresence mode="wait" custom={direction}>
                         <motion.div
@@ -306,10 +290,10 @@ const HomePage: React.FC = () => {
         );
     };
 
-    // RENDER DEL HOMEPAGE COMPLETO
+    // HOMEPAGE COMPLETO
     return (
         <div> 
-            {/* HERO del banner */}
+            {/* HERO */}
             <motion.section 
                 ref={heroRef}
                 className="relative h-[60vh] md:h-[calc(100vh-80px)] bg-cover bg-center flex items-center overflow-hidden" 
@@ -317,7 +301,7 @@ const HomePage: React.FC = () => {
                     backgroundImage: 'url(https://picsum.photos/seed/hero-background/1920/1080)' 
                 }}
             >
-                {/* Imagen de fondo con Parallax */}
+                {/* Imagen de fondo */}
                 <motion.div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ 
@@ -326,13 +310,13 @@ const HomePage: React.FC = () => {
                     }}
                 />
                 
-                {/* Overlay oscuro semitransparente para la imagen */}
+                {/* Overlay oscuro*/}
                 <motion.div 
                     className="absolute inset-0 bg-black/40"
                     style={{ opacity: heroOpacity }}
                 />
                 
-                {/* Contenido del hero */}
+                {/* Contenido*/}
                 <div className="relative container mx-auto px-4 text-center text-white z-10">
                     <motion.h1 
                         className="font-serif-display text-6xl md:text-8xl font-bold"
@@ -354,7 +338,7 @@ const HomePage: React.FC = () => {
                     </motion.p>
                     
                     <motion.a 
-                        href="#categories" 
+                        href="/" 
                         className="mt-8 inline-block bg-white text-text-primary font-bold py-3 px-8 rounded-lg text-lg shadow-md"
                         variants={heroCTA}
                         initial="hidden"
@@ -368,10 +352,10 @@ const HomePage: React.FC = () => {
                 </div>
             </motion.section>
 
-            {/* PRODUCTOS POPULARES DE TEMPORADA*/}
+            {/* PRODUCTOS DE TEMPORADA*/}
             <section id="popular-products" className="py-16 md:py-20 bg-gradient-to-b from-primary to-white/50">
                 <div className="container mx-auto px-4">
-                    {/* Título */}
+                    {/* título */}
                     <motion.div 
                         className="text-center mb-12"
                         initial={{ opacity: 0, y: 20 }}
@@ -398,22 +382,20 @@ const HomePage: React.FC = () => {
                     </motion.div>
                 </div>
                 
-                {/* Contenedor del carrusel con botones de navegación */}
+                {/*carrusel con navegación */}
                 <motion.div 
                     className="relative"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={viewportConfig}
-                    // Pausa y reanuda el auto-play al interactuar
+                    // pausa y reanuda
                     onMouseEnter={pauseAutoPlay} 
                     onMouseLeave={resumeAutoPlay}
                 >
                     <div className="container mx-auto px-4 relative py-8">
                         {renderCarousel()}
-                    </div>
-                    
+                    </div>         
                     {/* Botones de navegación */}
-                    {/* ⚡ ACTUALIZADO: Usa loadingCategories y seasonalProducts */}
                     {!loadingCategories && seasonalProducts.length > 0 && (
                         <>
                             <motion.button
@@ -441,9 +423,7 @@ const HomePage: React.FC = () => {
                             </motion.button>
                         </>
                     )}
-                    
-                    {/* Indicadores (puntos) */}
-                    {/* ⚡ ACTUALIZADO: Usa loadingCategories y seasonalProducts */}
+                    {/* Indicadores */}
                     {!loadingCategories && seasonalProducts.length > 0 && (
                         <div className="flex justify-center gap-2 mt-8">
                             {seasonalProducts.map((_, index) => (
@@ -461,7 +441,7 @@ const HomePage: React.FC = () => {
                         </div>
                     )}
                     
-                    {/* Indicador de auto-play */}
+                    {/* play */}
                     <div className="flex justify-center mt-4">
                         <button
                             onClick={() => setIsAutoPlaying(!isAutoPlaying)}
@@ -494,10 +474,9 @@ const HomePage: React.FC = () => {
                     whileInView="visible"
                     viewport={viewportConfig}
                 >
-                    {/* Renderizado Loading y Categorías */}
+                    {/* renderizado loading y Categorías */}
                     {loadingCategories ? (
-                        // Primero se muestra los skeleton
-                        // Array.from({ length: 3 }) crea array de 3 elementos undefined
+                        // primero los skeleton
                         Array.from({ length: 3 }).map((_, index) => ( 
                             <motion.div 
                                 key={index} 
@@ -506,7 +485,7 @@ const HomePage: React.FC = () => {
                             />
                         ))
                     ) : (
-                        // Cuando se cargan los datos se muestran en CategoryCards
+                        // cuando se cargan los datos se muestran en CategoryCards
                         categories.map((category) => ( 
                             <motion.div 
                                 key={category.slug}
@@ -522,7 +501,7 @@ const HomePage: React.FC = () => {
             {/* SECCIÓN DE NOSOTROS*/}
             <section id="nosotros" className="container mx-auto px-4 py-16 md:py-20 bg-white/50 rounded-2xl">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
-                    {/* Textos */}
+                    {/* terxto */}
                     <motion.div
                         variants={fadeInLeft}
                         initial="hidden"
@@ -538,7 +517,7 @@ const HomePage: React.FC = () => {
                             calidez y hogar. Utilizamos solo los ingredientes más frescos y de la más alta 
                             calidad para crear sabores que perduran en la memoria.
                         </p>
-                        {/* Link a la página completa de nosotros */}
+                        {/* página de nosotros */}
                         <motion.div whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}> 
                             <Link 
                                 to="/nosotros" 
@@ -552,7 +531,7 @@ const HomePage: React.FC = () => {
                         </motion.div>
                     </motion.div>
                     
-                    {/* Columna de imagen */}
+                    {/* imagen */}
                     <motion.div 
                         className="h-80 md:h-96 rounded-2xl overflow-hidden shadow-2xl"
                         variants={fadeInRight}
@@ -571,7 +550,7 @@ const HomePage: React.FC = () => {
                 </div>
             </section>
 
-            {/* SECCIÓN DE TESTIMONIOS */}
+            {/* SECCIÓN TESTIMONIOS */}
             <section id="testimonials" className="py-16 md:py-20 bg-accent/10">
                 <div className="container mx-auto px-4">
                     <motion.h2 
@@ -623,7 +602,7 @@ const HomePage: React.FC = () => {
                             />
                         </div>
                         
-                        {/* Texto y boton */}
+                        {/* texto y boton */}
                         <div className="p-10 md:p-16 flex flex-col justify-center order-2 lg:order-1 text-center lg:text-left items-center lg:items-start">
                             <h3 className="font-serif-display text-4xl md:text-5xl font-bold text-text-primary mb-4">
                                 ¿Listo para endulzar tu día?
@@ -650,33 +629,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
-/* ===== OPTIMIZACIONES IMPLEMENTADAS =====
-
-✅ ELIMINADO:
-1. import fetchSeasonalProducts
-2. useState para popularProducts
-3. useState para loadingPopular
-4. useEffect completo que cargaba productos
-
-✅ AGREGADO:
-1. seasonalProducts desde useData()
-2. Uso de loadingCategories para todos los skeletons
-
-✅ ACTUALIZADO:
-1. Todas las referencias popularProducts → seasonalProducts
-2. Todas las referencias loadingPopular → loadingCategories
-3. useEffect de auto-play ahora usa seasonalProducts.length
-4. Funciones goToNext/goToPrev usan seasonalProducts.length
-5. getVisibleProducts usa seasonalProducts
-6. renderCarousel usa loadingCategories y seasonalProducts
-7. Botones de navegación usan loadingCategories y seasonalProducts
-8. Indicadores de puntos usan seasonalProducts
-
-✅ RESULTADO:
-- HomePage ya NO hace peticiones HTTP
-- Los productos de temporada vienen pre-cargados
-- Carrusel funciona instantáneamente
-- Sin delays ni loading adicional
-
-*/

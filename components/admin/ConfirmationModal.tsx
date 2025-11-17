@@ -1,3 +1,4 @@
+// botones de accion
 import React from 'react';
 
 interface ConfirmationModalProps {

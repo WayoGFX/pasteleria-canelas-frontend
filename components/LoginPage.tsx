@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-// ===== VARIANTES DE ANIMACIÓN =====
+// VARIANTES DE ANIMACIÓN
 const containerVariants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: { 
@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
                 setError('Usuario o contraseña incorrectos.');
                 setIsLoading(false);
             }
-            // Si success = true, el useEffect redirige automáticamente
+            // Si success es true, el useEffect redirige automáticamente
         }, 500);
     };
 
@@ -85,17 +85,17 @@ const LoginPage: React.FC = () => {
                 initial="hidden"
                 animate="visible"
             >
-                {/* Card principal */}
+                {/* card principal */}
                 <div className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl border border-gray-100">
                     
-                    {/* Header con ícono */}
+                    {/* header con ícono */}
                     <motion.div 
                         className="text-center"
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
                     >
-                        {/* Ícono de admin */}
+                        {/* icono de admin */}
                         <motion.div 
                             className="mx-auto h-16 w-16 bg-secondary/10 rounded-full flex items-center justify-center mb-4"
                             whileHover={{ scale: 1.05, rotate: 5 }}
@@ -114,7 +114,7 @@ const LoginPage: React.FC = () => {
                         </p>
                     </motion.div>
 
-                    {/* Formulario */}
+                    {/* formulario */}
                     <motion.form 
                         className="mt-8 space-y-5"
                         onSubmit={handleSubmit}
@@ -122,7 +122,7 @@ const LoginPage: React.FC = () => {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3, duration: 0.5 }}
                     >
-                        {/* Campo Usuario */}
+                        {/* campo Usuario */}
                         <div>
                             <label 
                                 htmlFor="username" 
@@ -146,7 +146,7 @@ const LoginPage: React.FC = () => {
                             />
                         </div>
 
-                        {/* Campo Contraseña */}
+                        {/* campo Contraseña */}
                         <div>
                             <label 
                                 htmlFor="password-input" 
@@ -170,7 +170,7 @@ const LoginPage: React.FC = () => {
                             />
                         </div>
 
-                        {/* Mensaje de error */}
+                        {/* mensaje de error */}
                         <AnimatePresence mode="wait">
                             {error && (
                                 <motion.div 
@@ -186,7 +186,7 @@ const LoginPage: React.FC = () => {
                             )}
                         </AnimatePresence>
 
-                        {/* Botón de submit */}
+                        {/* botón de envair */}
                         <motion.button
                             type="submit"
                             disabled={isLoading}
@@ -222,7 +222,7 @@ const LoginPage: React.FC = () => {
                         </motion.button>
                     </motion.form>
 
-                    {/* Footer con info */}
+                    {/* footer */}
                     <motion.div 
                         className="mt-6 text-center"
                         initial={{ opacity: 0 }}
@@ -235,7 +235,7 @@ const LoginPage: React.FC = () => {
                     </motion.div>
                 </div>
 
-                {/* Decoración de fondo */}
+                {/* decoración de fondo */}
                 <motion.div
                     className="absolute inset-0 -z-10 overflow-hidden pointer-events-none"
                     initial={{ opacity: 0 }}
@@ -251,48 +251,3 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
-
-/* ===== MEJORAS IMPLEMENTADAS =====
-
-✅ DISEÑO:
-- Card con sombra 2xl y bordes redondeados
-- Gradiente de fondo sutil
-- Ícono de admin con badge circular
-- Labels visibles (mejor UX)
-- Inputs con esquinas redondeadas
-- Error con ícono y mejor diseño
-
-✅ ANIMACIONES:
-- Card aparece con fade + scale
-- Header con slide down
-- Form con fade in
-- Inputs con scale sutil en focus
-- Error con spring animation
-- Botón con hover elevation
-- Loading con spinner rotatorio
-
-✅ ESTADOS:
-- Loading state con spinner
-- Disabled inputs durante loading
-- Botón cambia color cuando loading
-- Error con AnimatePresence
-
-✅ UX:
-- Delay de 500ms para simular auth real
-- Feedback visual claro en cada acción
-- Placeholder mejorados
-- Mensaje de ayuda en footer
-- Decoración de fondo sutil
-
-✅ ACCESIBILIDAD:
-- Labels visibles (no solo sr-only)
-- Colores con buen contraste
-- Estados disabled claros
-- Focus states definidos
-
-===== CREDENCIALES POR DEFECTO =====
-
-Usuario: admin
-Contraseña: (definido en AuthContext)
-
-*/

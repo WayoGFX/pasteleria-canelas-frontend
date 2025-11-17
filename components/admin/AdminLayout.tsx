@@ -3,10 +3,8 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// VARIANTES DE ANIMACIÓN
-// ═══════════════════════════════════════════════════════════════════════════════
 
+// VARIANTES DE ANIMACIÓN
 const overlayVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -33,21 +31,16 @@ const sidebarVariants = {
     }
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// COMPONENTE PRINCIPAL
-// ═══════════════════════════════════════════════════════════════════════════════
 
+// COMPONENTE PRINCIPAL
 const AdminLayout: React.FC = () => {
     const { logout } = useAuth();
-    
-    // ───────────────────────────────────────────────────────────────────────────
-    // ESTADO: Controla si el menú móvil está abierto
-    // ───────────────────────────────────────────────────────────────────────────
+
+    // Estado | Controla si el menú móvil está abierto
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // ───────────────────────────────────────────────────────────────────────────
-    // FUNCIÓN: Clases dinámicas para los NavLinks
-    // ───────────────────────────────────────────────────────────────────────────
+
+    // Clases dinámicas para los navLinks
     const navLinkClasses = ({ isActive }: { isActive: boolean }) =>
         `flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
             isActive 
@@ -55,13 +48,9 @@ const AdminLayout: React.FC = () => {
             : 'text-text-secondary hover:bg-gray-100 hover:text-text-primary'
         }`;
 
-    // ───────────────────────────────────────────────────────────────────────────
-    // COMPONENTE REUTILIZABLE: Contenido del Sidebar
-    // Se usa tanto en desktop como en móvil para evitar duplicación
-    // ───────────────────────────────────────────────────────────────────────────
+    // Contenido del Sidebar
     const SidebarContent: React.FC<{ onLinkClick?: () => void }> = ({ onLinkClick }) => (
         <>
-            {/* Header del sidebar */}
             <div>
                 <div className="font-serif-display text-2xl font-bold text-text-primary mb-8">
                     Admin Panel
@@ -99,7 +88,7 @@ const AdminLayout: React.FC = () => {
                 </nav>
             </div>
             
-            {/* Botón de cerrar sesión (siempre al fondo) */}
+            {/* Botón de cerrar sesión*/}
             <div className="mt-auto">
                 <button 
                     onClick={() => {
@@ -117,22 +106,13 @@ const AdminLayout: React.FC = () => {
 
     return (
         <div className="flex min-h-screen bg-gray-50">
-            
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* SIDEBAR DESKTOP (oculto en móvil) */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* sidebar para compu */}
             <aside className="hidden lg:flex w-64 flex-shrink-0 bg-primary border-r border-gray-200 p-4 flex-col">
                 <SidebarContent />
             </aside>
-            
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* MAIN CONTENT (con offset del sidebar en desktop) */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            <div className="flex-1 flex flex-col min-w-0"> {/* min-w-0 previene overflow */}
-                
-                {/* ─────────────────────────────────────────────────────────── */}
-                {/* HEADER CON HAMBURGER (solo visible en móvil/tablet) */}
-                {/* ─────────────────────────────────────────────────────────── */}
+            {/* Contenido */}
+            <div className="flex-1 flex flex-col min-w-0">
+                {/* HEADERcon hamburguesa */}
                 <header className="lg:hidden sticky top-0 z-20 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
                     {/* Botón hamburguesa */}
                     <motion.button
@@ -143,24 +123,17 @@ const AdminLayout: React.FC = () => {
                     >
                         <span className="material-symbols-outlined text-2xl">menu</span>
                     </motion.button>
-                    
-                    {/* Título */}
                     <h1 className="font-serif-display text-xl font-bold text-text-primary">
                         Admin Panel
                     </h1>
                 </header>
                 
-                {/* ─────────────────────────────────────────────────────────── */}
                 {/* CONTENIDO PRINCIPAL */}
-                {/* ─────────────────────────────────────────────────────────── */}
                 <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden">
                     <Outlet />
                 </main>
             </div>
-            
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* SIDEBAR MÓVIL (overlay + panel lateral) */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* SIDEBAR MÓVIL */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div 
@@ -169,19 +142,19 @@ const AdminLayout: React.FC = () => {
                         animate="visible"
                         exit="exit"
                     >
-                        {/* Overlay oscuro */}
+
                         <motion.div 
                             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                             variants={overlayVariants}
                             onClick={() => setIsMobileMenuOpen(false)}
                         />
                         
-                        {/* Panel lateral */}
+                        {/* panel lateral */}
                         <motion.aside 
                             className="relative z-10 h-full w-72 sm:w-80 bg-primary shadow-2xl p-4 flex flex-col"
                             variants={sidebarVariants}
                         >
-                            {/* Botón cerrar */}
+                            {/* nbotón cerrar */}
                             <div className="flex justify-end mb-4">
                                 <motion.button
                                     onClick={() => setIsMobileMenuOpen(false)}
@@ -194,7 +167,7 @@ const AdminLayout: React.FC = () => {
                                 </motion.button>
                             </div>
                             
-                            {/* Contenido del sidebar (reutilizado) */}
+                            {/* Contenido del sidebar0*/}
                             <SidebarContent onLinkClick={() => setIsMobileMenuOpen(false)} />
                         </motion.aside>
                     </motion.div>
@@ -205,67 +178,3 @@ const AdminLayout: React.FC = () => {
 };
 
 export default AdminLayout;
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   CAMBIOS REALIZADOS PARA RESPONSIVE
-   ═══════════════════════════════════════════════════════════════════════════════
-
-   ✅ SIDEBAR DESKTOP:
-   - Oculto en móvil/tablet: hidden lg:flex
-   - Visible solo desde 1024px en adelante
-   - Mantiene el mismo estilo original
-
-   ✅ HEADER MÓVIL:
-   - Solo visible en móvil/tablet: lg:hidden
-   - Hamburger button con animación
-   - Sticky para que siempre esté visible
-   - Título "Admin Panel" visible
-
-   ✅ SIDEBAR MÓVIL:
-   - Overlay con backdrop-blur
-   - Panel lateral animado (slide desde izquierda)
-   - Botón X para cerrar
-   - Cierra automáticamente al hacer click en un link
-   - Cierra al hacer click fuera (overlay)
-
-   ✅ MAIN CONTENT:
-   - Padding responsive: p-4 md:p-6 lg:p-8
-   - overflow-x-hidden para prevenir scroll horizontal
-   - min-w-0 en el contenedor para prevenir overflow
-   - flex-1 para usar todo el espacio disponible
-
-   ✅ COMPONENTE REUTILIZABLE:
-   - SidebarContent se usa en desktop y móvil
-   - Evita duplicación de código
-   - onLinkClick opcional para cerrar menú en móvil
-
-   ✅ ANIMACIONES:
-   - Framer Motion para transiciones suaves
-   - Overlay fade in/out
-   - Sidebar slide con spring animation
-   - Botón cerrar rota en hover
-
-   ═══════════════════════════════════════════════════════════════════════════════
-   BREAKPOINTS
-   ═══════════════════════════════════════════════════════════════════════════════
-
-   📱 MÓVIL (<1024px):
-   ┌─────────────────────────┐
-   │ [☰] Admin Panel         │ ← Header con hamburger
-   ├─────────────────────────┤
-   │                         │
-   │   Contenido (Outlet)    │
-   │                         │
-   └─────────────────────────┘
-
-   💻 DESKTOP (≥1024px):
-   ┌────────┬────────────────┐
-   │ Sidebar│ Contenido      │
-   │        │                │
-   │ Nav    │ (Outlet)       │
-   │        │                │
-   │ Logout │                │
-   └────────┴────────────────┘
-
-   ═══════════════════════════════════════════════════════════════════════════════
-*/

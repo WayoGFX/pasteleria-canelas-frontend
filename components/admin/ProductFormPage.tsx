@@ -180,7 +180,7 @@ const PriceManager: React.FC<{
                             </>
                         ) : (
                             <>
-                                {/* MODO NORMAL: para agregar Muestra texto */}
+                                {/* MODO NORMAL para agregar Muestra texto */}
                                 {/* Mostrar descripción y precio */}
                                 <span className="flex-grow text-sm">
                                     {price.descripcionPrecio} - <strong>${price.precio.toFixed(2)}</strong>
@@ -258,8 +258,8 @@ const ProductFormPage: React.FC = () => {
     
     // HOOKS DE REACT ROUTER
     // se definnen las rutas para crear nuevo o editar
-    // /admin/products/new → id = undefined (crear nuevo)
-    // /admin/products/edit/5 → id = "5" (editar existente)
+    // /admin/products/new → id = undefined crear nuevo
+    // /admin/products/edit/5 → id = "5" editar existente
     
     const { id } = useParams<{ id: string }>();
     
@@ -445,8 +445,7 @@ const ProductFormPage: React.FC = () => {
                     <h2 className="text-xl font-bold font-serif-display border-b pb-2">
                         Información del Producto
                     </h2>
-                    
-                    {/*Nombre*/}
+
                     <div>
                         <label htmlFor="nombre" className="block text-sm font-medium text-text-primary">
                             Nombre
@@ -462,7 +461,7 @@ const ProductFormPage: React.FC = () => {
                         />
                     </div>
                     
-                    {/*Categoría*/}
+                    {/*categoría*/}
                     <div>
                         <label htmlFor="categoriaId" className="block text-sm font-medium text-text-primary">
                             Categoría
@@ -484,7 +483,7 @@ const ProductFormPage: React.FC = () => {
                         </select>
                     </div>
                     
-                    {/*Descripción*/}
+                    {/*descripción*/}
                     <div>
                         <label htmlFor="descripcion" className="block text-sm font-medium text-text-primary">
                             Descripción
@@ -500,7 +499,7 @@ const ProductFormPage: React.FC = () => {
                         ></textarea>
                     </div>
                     
-                    {/*URL de Imagen */}
+                    {/*uRL de Imagen */}
                     <div>
                         <label htmlFor="imagenUrl" className="block text-sm font-medium text-text-primary">
                             URL de la Imagen
@@ -529,7 +528,7 @@ const ProductFormPage: React.FC = () => {
                     
                     {/* checkbox de  Activo y De Temporada */}
                     <div className="flex space-x-8">
-                        {/* Checkbox: Producto Activo */}
+                        {/* Checkbox Producto Activo */}
                         <div className="flex items-center">
                             <input 
                                 id="activo" 
@@ -560,7 +559,7 @@ const ProductFormPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                {/* SECCIÓN 2: PRECIOS (SOLO EN MODO EDICIÓN) */}
+                {/* PRECIOS SOLO EN MODO EDICIÓN*/}
                 {isEditing && id && (
                      <div className="bg-white p-8 rounded-lg shadow-md">
                         <PriceManager 
@@ -574,7 +573,7 @@ const ProductFormPage: React.FC = () => {
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 {/* BOTONES DE ACCIÓN */}
                 <div className="flex justify-end gap-4 pt-4">
-                    {/* Botón Cancelar */}
+                    {/* botón Cancelar */}
                     <Link 
                         to="/admin/products" 
                         className="bg-gray-200 text-text-secondary font-bold py-2 px-4 rounded-lg transition-colors hover:bg-gray-300"
@@ -582,7 +581,7 @@ const ProductFormPage: React.FC = () => {
                         Cancelar
                     </Link>
                     
-                    {/* Botón Guardar */}
+                    {/* botón Guardar */}
                     <button 
                         type="submit" 
                         disabled={submitting} 

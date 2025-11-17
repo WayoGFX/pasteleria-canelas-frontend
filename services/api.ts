@@ -1,6 +1,6 @@
-    // Este archivo se comunica con la API 
+    // este archivo se comunica con la API 
 
-    // Importamos los tipos que definen la estructura de nuestros datos
+    // importamos los tipos que definen la estructura de datos
     import {
     Category,           
     Product,            
@@ -10,16 +10,12 @@
     AdminProductSummary,
     AdminProductPrice,
     CatalogoInicial,   
-    } from '../types';
+    } from '../types'; // viene de los tipos osea las interfaces
 
 
-    // SECCIÓN 1: DATOS DE PRUEBA (MOCK DATA)
-    // Estos datos se usan cuando la API no está disponible o falla.
-
-    // por si no conecta los datos ya se enlazan los datos de prueba
+    // DATOS DE PRUEBA
+    // se usan cuando la API no está disponible o falla XD
     const USE_MOCK_DATA_ON_FAIL = true;
-
-    // Categorías de ejemplo que simulan lo que devolvería la API
     const MOCK_CATEGORIES: Category[] = [
     {
         slug: 'pasteles',                   
@@ -29,8 +25,6 @@
         icon: 'cake', 
     },
     ];
-
-    // Productos de ejemplo
     const MOCK_PRODUCTS: Product[] = [
     {
         id: 'pastel-chocolate-fudge',       
@@ -47,71 +41,36 @@
     ];
 
 
-    // SECCIÓN 2: CONFIGURACIÓN DE LA API
-
+    // CONFIGURACIÓN DE LA API
     // url de la api para poder conectarse .env
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
+    // FUNCIONES DE MAPEO
+    // estas funciones transforman los datos de la API 
 
-    // SECCIÓN 3: FUNCIONES DE MAPEO
-
-    // Estas funciones transforman los datos de la API 
-
-
-    /**
-     * Convierte una URL de imagen a un formato completo
-     * @param imageName - Nombre o URL de la imagen
-     * @returns URL completa de la imagen
-     * 
-     * Ejemplos:
-     * - Si viene "producto1" → devuelve "./images/producto1.webp"
-     * - Si viene "http://..." → devuelve la misma URL
-     * - Si viene vacío → devuelve un placeholder
-     */
     const getImageUrl = (imageName: string) => {
-        // Si no hay nombre de imagen, devolver un placeholder
+        // si no hay nombre de imagen devolver un placeholder
         if (!imageName) {
             return 'https://picsum.photos/seed/placeholder/500/500';
         }
-        // Si ya es una URL completa (empieza con http), devolverla tal cual
+        // si ya es una URL completa devolverla tal cual
         if (imageName.startsWith('http')) {
             return imageName;
         }
-        // Si es un nombre de archivo, construir la ruta completa
-        // Quita cualquier "/" al inicio y agrega la extensión .webp
+        // si es un nombre de archivo
+        // quita cualquier / al inicio y agrega la extensión .webp o jpg lo que quiera
         return `./images/${imageName.replace(/^\//, '')}.webp`;
     };
 
-    /**
-     * Convierte un precio de la API al formato del frontend
-     * @param apiPrice - Objeto precio de la API: { descripcionPrecio, precio }
-     * @param index - Índice del precio (para generar nombre si falta)
-     * @returns Objeto ProductPrice: { size, price }
-     * 
-     * Transforma de:
-     * { descripcionPrecio: "1 porción", precio: 85.00 }
-     * a:
-     * { size: "1 porción", price: 85.00 }
-     */
+    // mapeo dep roductos
     const mapApiProductPrice = (apiPrice: any, index: number): ProductPrice => ({
-        size: apiPrice.descripcionPrecio || `Opción ${index + 1}`, // Si no hay descripción, usar "Opción 1", "Opción 2", etc.
+        size: apiPrice.descripcionPrecio || `Opción ${index + 1}`, // si no hay descripción pone texto por defecto
         price: apiPrice.precio,
     });
 
-    /**
-     * Convierte una categoría de la API al formato del frontend
-     * @param apiCategory - Categoría desde la API con campos en español
-     * @returns Objeto Category para usar en el frontend
-     * 
-     * Mapeo de campos:
-     * - nombre → name
-     * - descripcion → description
-     * - imagenUrl → image (procesada por getImageUrl)
-     * - icono → icon
-     * - slug → slug (se mantiene igual)
-     */
+    // mapeo de categorias
     const mapApiCategory = (apiCategory: any): Category => {
-        // Si no viene categoría, devolver una por defecto
+        // si no viene categoría devolver una por defecto
         if (!apiCategory) {
             return { 
             slug: '', 
@@ -130,102 +89,46 @@
         };
     };
 
-    /**
-     * Convierte un producto resumido de la API al formato del frontend
-     * Usado en listas de productos (catálogo público)
-     * @param apiProduct - Producto desde la API
-     * @param categorySlug - Slug de la categoría (viene por separado)
-     * @returns Objeto Product para el catálogo
-     */
-    const mapApiProductSummary = (apiProduct: any, categorySlug: string): Product => ({
-        id: apiProduct.slug,                    // para el usuario usamos slug
-        name: apiProduct.nombre,
-        description: apiProduct.descripcion,
-        image: getImageUrl(apiProduct.imagenUrl),
-        category: categorySlug,                 // Categoría a la que pertenece
-        prices: (apiProduct.productoPrecios || []).map(mapApiProductPrice), // Mapea todos los precios
-        seasonal: categorySlug === 'temporada', // Si la categoría es "temporada", marcarlo
-        featured: apiProduct.esDestacado,       // ¿Es destacado?
-    });
-
-    /**
-     * Convierte un producto de la API al formato AdminProductSummary
-     * Usado en la lista de productos del panel admin
-     * @param apiProduct - Producto completo desde la API
-     * @returns AdminProductSummary con todos los campos necesarios
-     */
+    // productos dto pero para admin
     const mapApiAdminProductSummary = (apiProduct: any): AdminProductSummary => ({
-        productoId: apiProduct.productoId,      // ID numérico (para admin)
+        productoId: apiProduct.productoId,
         nombre: apiProduct.nombre,
         slug: apiProduct.slug,
         descripcion: apiProduct.descripcion,
         imagenUrl: getImageUrl(apiProduct.imagenUrl),
-        activo: apiProduct.activo,              // ¿Está activo o inactivo?
+        activo: apiProduct.activo,
         esDeTemporada: apiProduct.esDeTemporada,
-        categoriaId: apiProduct.categoria.categoriaId, // ID de la categoría
-        productoPrecios: apiProduct.productoPrecios || [], // Lista de precios
+        categoriaId: apiProduct.categoria.categoriaId,
+        productoPrecios: apiProduct.productoPrecios || [], // lista de precios
     });
 
-    /**
-     * Convierte el detalle completo de un producto de la API
-     * Usado en la página de detalle de producto (catálogo público)
-     * @param apiProduct - Producto completo con categoría incluida
-     * @returns Product con todos los detalles
-     */
-    const mapApiProductDetail = (apiProduct: any): Product => ({
-        id: apiProduct.slug,
-        name: apiProduct.nombre,
-        description: apiProduct.descripcion,
-        image: getImageUrl(apiProduct.imagenUrl),
-        category: apiProduct.categoria?.slug || '', // Slug de la categoría
-        prices: (apiProduct.productoPrecios || []).map(mapApiProductPrice),
-        seasonal: apiProduct.esDeTemporada,
-        featured: apiProduct.esDestacado,
-    });
-
-
-    // SECCIÓN 4: FUNCIÓN GENÉRICA PARA LLAMADAS A LA API
-
-    /**
-     * Función genérica para hacer peticiones HTTP a la API
-     * @param endpoint - Ruta del endpoint (ej: '/api/Productos')
-     * @param method - Método HTTP: GET, POST, PUT, DELETE
-     * @param body - Datos a enviar (para POST/PUT)
-     * @returns Promesa con la respuesta parseada como JSON
-     * 
-     * Esta función:
-     * 1. Construye la petición HTTP con headers JSON
-     * 2. Envía los datos si es POST/PUT
-     * 3. Maneja errores de la API
-     * 4. Devuelve los datos parseados
-     */
+    // LLAMADAS A LA API
     const apiRequest = async <T>(
         endpoint: string, 
         method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET', 
         body?: any
     ): Promise<T> => {
-        // Configuración de la petición HTTP
+        // configuración de la petición HTTP
         const config: RequestInit = {
             method,
             headers: {
-                'Content-Type': 'application/json',  // Enviamos JSON
-                'Accept': 'application/json',        // Esperamos JSON
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
         };
 
-        // Si hay datos para enviar (POST/PUT), agregarlos al body
+        // si hay datos para enviar POST/PUT los agrega al body
         if (body) {
-            config.body = JSON.stringify(body); // Convertir objeto JS a string JSON
+            config.body = JSON.stringify(body); // c0nvertir objeto JS a string JSON
         }
 
-        // Hacer la petición HTTP
+        // hacer la petición HTTP
         const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-        // Si la respuesta NO es exitosa (código 400-599)
+        // si la respuesta NO es exitosa
         if (!response.ok) {
-            let errorMessage = `Fallo al llamar la api : ${response.statusText}`;
+            let errorMessage = `fallo al llamar la api : ${response.statusText}`;
             try {
-                // Intentar leer el mensaje de error del backend
                 const errorBody = await response.json();
                 errorMessage = errorBody.message || errorBody.title || JSON.stringify(errorBody);
             } catch (e) {
@@ -233,55 +136,41 @@
             throw new Error(errorMessage);
         }
         
-        // Si la respuesta es 204 (No Content) o está vacía, devolver null
+        // si la respuesta es 204 No Content o está vacía envia null
         if (response.status === 204 || response.headers.get('content-length') === '0') {
             return null as T;
         }
         
-        // Parsear y devolver el JSON
+        // devolver el JSON
         return response.json();
     };
 
 
 
-// SECCIÓN 5: API PÚBLICA - CATÁLOGO (para clientes)
-// ⚡ OPTIMIZADO: Una sola petición trae todo el catálogo
-
-/**
- * ✨ NUEVO: Obtiene el catálogo inicial completo en una sola petición
- * Endpoint: GET /api/Catalogo/inicial
- * Usado en: DataContext (se carga al inicio de la app)
- * 
- * Retorna:
- * - Todas las categorías activas
- * - Todos los productos activos (con solo el slug de su categoría)
- * - Productos de temporada
- * 
- * El frontend resuelve las relaciones en memoria (más rápido que HTTP)
- */
+//  CATÁLOGO 
 export const fetchInitialCatalog = async (): Promise<CatalogoInicial> => {
     try {
-        // Una sola petición HTTP trae todo
+        // una sola petición HTTP
         const apiData = await apiRequest<any>('/api/Catalogo/inicial');
         
-        // Mapear categorías
+        // mapear categorías
         const categories = apiData.categorias
             .filter((cat: any) => cat.activo)
             .map(mapApiCategory);
         
-        // Mapear productos (usa categoriaSlug, no el objeto completo)
+        // mapear productos con slug
         const products = apiData.productos.map((p: any) => ({
             id: p.slug,
             name: p.nombre,
             description: p.descripcion,
             image: getImageUrl(p.imagenUrl),
-            category: p.categoriaSlug, // ⚡ Solo el slug (ligero)
+            category: p.categoriaSlug, //solo el slug
             prices: (p.productoPrecios || []).map(mapApiProductPrice),
             seasonal: p.esDeTemporada,
             featured: p.esDestacado || false,
         }));
         
-        // Productos de temporada (ya vienen filtrados del backend)
+        // productos de temporada
         const seasonal = apiData.temporada.map((p: any) => ({
             id: p.slug,
             name: p.nombre,
@@ -300,7 +189,7 @@ export const fetchInitialCatalog = async (): Promise<CatalogoInicial> => {
         };
     } catch (error) {
         console.warn("Fallo al conectar el catálogo inicial, se conectan los datos de prueba.", error);
-        // Si falla, usar datos de prueba
+        // Si falla usar datos de prueba
         if (USE_MOCK_DATA_ON_FAIL) {
             return {
                 categories: MOCK_CATEGORIES,
@@ -311,141 +200,64 @@ export const fetchInitialCatalog = async (): Promise<CatalogoInicial> => {
         throw error;
     }
 };
-
-
-
-    // SECCIÓN 6: API DE ADMINISTRACIÓN - CATEGORÍAS
-    // Funciones CRUD para gestionar categorías desde el panel admin
-
-    /**
-     * Obtiene TODAS las categorías (activas e inactivas)
-     * Endpoint: GET /api/Categorias
-     * Usado en: CategoryListPage
-     */
+    // API DE ADMINISTRACIÓN 
     export const fetchAdminCategories = () => 
         apiRequest<AdminCategory[]>('/api/Categorias');
 
 
-    // se obtienen categorías por id para tener mejor control
+    // se obtienen categorías por id 
     export const fetchAdminCategoryById = (id: number) => 
         apiRequest<AdminCategory>(`/api/Categorias/${id}`);
 
-    /**
-     * Crea una nueva categoría
-     * Endpoint: POST /api/Categorias
-     * Usado en: CategoryFormPage (modo creación)
-     * @param data - Datos de la categoría (sin ID ni slug, se generan en backend)
-     */
+    // crear nueva categoria
     export const createCategory = (data: Omit<AdminCategory, 'categoriaId' | 'slug' | 'activo'>) => 
         apiRequest<AdminCategory>('/api/Categorias', 'POST', data);
-
-    /**
-     * Actualiza una categoría existente
-     * Endpoint: PUT /api/Categorias/{id}
-     * Usado en: CategoryFormPage (modo edición)
-     * @param id - ID de la categoría a actualizar
-     * @param data - Datos completos de la categoría
-     */
+    
+    // actualizar
     export const updateCategory = (id: number, data: AdminCategory) => 
         apiRequest<void>(`/api/Categorias/${id}`, 'PUT', data);
 
-    /**
-     * Elimina una categoría
-     * Endpoint: DELETE /api/Categorias/{id}
-     * Usado en: CategoryListPage (botón eliminar)
-     * @param id - ID de la categoría a eliminar
-     */
+    // eliminar
     export const deleteCategory = (id: number) => 
         apiRequest<void>(`/api/Categorias/${id}`, 'DELETE');
 
 
-    // SECCIÓN 7: API DE ADMINISTRACIÓN - PRODUCTOS
-
-    /**
-     * Obtiene TODOS los productos (activos e inactivos) con sus detalles
-     * Endpoint: GET /api/Productos
-     * Usado en: ProductListPage
-     * @returns Lista de productos con categoría y precios incluidos
-     */
+    // PRODUCTOS
     export const fetchAdminProducts = async (): Promise<AdminProductSummary[]> => {
         const apiProducts = await apiRequest<any[]>('/api/Productos');
-        // Mapear cada producto al formato AdminProductSummary
+        // mapear cada producto al formato AdminProductSummary
         return apiProducts.map(mapApiAdminProductSummary);
     };
 
-    /**
-     * Obtiene un producto específico por ID con todos sus detalles
-     * Endpoint: GET /api/Productos/{id}
-     * Usado en: ProductFormPage (modo edición)
-     * @param id - ID numérico del producto
-     */
+    // traer producto por id
     export const fetchAdminProductById = (id: number) => 
         apiRequest<AdminProductDetail>(`/api/Productos/${id}`);
-
-    /**
-     * Crea un nuevo producto
-     * Endpoint: POST /api/Productos
-     * Usado en: ProductFormPage (modo creación)
-     * @param data - Datos del producto (sin precios, se agregan después)
-     */
+    
+    // crear producto
     export const createProduct = (data: any) => 
         apiRequest<AdminProductDetail>('/api/Productos', 'POST', data);
 
-    /**
-     * Actualiza un producto existente
-     * Endpoint: PUT /api/Productos/{id}
-     * Usado en: ProductFormPage (modo edición)
-     * @param id - ID del producto a actualizar
-     * @param data - Datos completos del producto
-     */
+    // actualizar
     export const updateProduct = (id: number, data: any) => 
         apiRequest<void>(`/api/Productos/${id}`, 'PUT', data);
 
-    /**
-     * Elimina un producto
-     * Endpoint: DELETE /api/Productos/{id}
-     * Usado en: ProductListPage (botón eliminar)
-     * @param id - ID del producto a eliminar
-     */
+    // eliminar
     export const deleteProduct = (id: number) => 
         apiRequest<void>(`/api/Productos/${id}`, 'DELETE');
 
 
-    // SECCIÓN 8: API DE ADMINISTRACIÓN - PRECIOS
-    // Un producto puede tener múltiples precios (ej: individual, familiar, etc.)
-
-    /**
-     * Crea un nuevo precio para un producto
-     * Endpoint: POST /api/Precios
-     * Usado en: PriceManager (dentro de ProductFormPage)
-     * @param data - Datos del precio: productoId, descripcionPrecio, precio
-     */
+    // PRECIOS
+    // crear
     export const createPrice = (data: { 
         productoId: number; 
         descripcionPrecio: string; 
         precio: number 
     }) => apiRequest<AdminProductPrice>('/api/Precios', 'POST', data);
 
-    /**
-     * Actualiza un precio existente
-     * Endpoint: PUT /api/Precios/{id}
-     * Usado en: PriceManager (botón editar)
-     * @param id - ID del precio a actualizar
-     * @param data - Nuevos datos del precio (sin el ID)
-     */
+    // actualizar
     export const updatePrice = (id: number, data: Omit<AdminProductPrice, 'productoPrecioId'>) => 
         apiRequest<void>(`/api/Precios/${id}`, 'PUT', data);
 
-    /**
-     * Elimina un precio
-     * Endpoint: DELETE /api/Precios/{id}
-     * Usado en: PriceManager (botón eliminar)
-     * @param id - ID del precio a eliminar
-     */
+    // eliminar
     export const deletePrice = (id: number) => 
         apiRequest<void>(`/api/Precios/${id}`, 'DELETE');
-
-
-
-    // Este archivo exporta 17 funciones que permiten al frontend comunicarse
-    // con el backend C# para gestionar todo el catálogo de la pastelería.

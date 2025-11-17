@@ -1,7 +1,6 @@
 // Componente principal para mostrar los detalles de una Categoría y sus productos.
-// ⚡ OPTIMIZADO: Filtra productos en memoria, sin peticiones HTTP adicionales
 
-import React, { useMemo } from 'react'; // ⚡ useMemo en lugar de useState/useEffect
+import React, { useMemo } from 'react'; // useMemo en lugar de useState/useEffect | para evitar peticiones http repetitivas
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useData } from '../context/DataContext';
@@ -10,7 +9,7 @@ import ProductCard from './ProductCard';
 import CategoryCard from './CategoryCard';
 import Breadcrumbs from './Breadcrumbs';
 
-// Importar variantes de animación
+// importar variantes de animación
 import {
     fadeIn,
     fadeInUp,
@@ -20,38 +19,37 @@ import {
 } from '../utils/animations';
 
 const CategoryPage: React.FC = () => {
-    // Obtiene el 'slug' de la URL (ej: /categoria/pasteles-boda -> slug = "pasteles-boda")
+    // Obtiene el slug de la URL | slug = pasteles-boda
     const { slug } = useParams<{ slug: string }>();
     
-    // ⚡ Obtiene TODOS los datos desde el Context (ya cargados al inicio)
+    // obtiene todos los datos desde el Context ya cargados al inicio
     const { categories, allProducts, loading } = useData();
     
-    // ⚡ NUEVO: Filtra la categoría actual en memoria (instantáneo, O(n))
+    // filtra la categoría actual en memoria para ser instantáneo
     const category = useMemo(
         () => categories.find(c => c.slug === slug),
         [categories, slug]
     );
     
-    // ⚡ NUEVO: Filtra productos de esta categoría en memoria (instantáneo, O(n))
+    // filtra productos de esta categoría en memoria
     const products = useMemo(
         () => allProducts.filter(p => p.category === slug),
         [allProducts, slug]
     );
     
-    // Filtra las otras categorías (para mostrarlas si no hay productos)
+    // filtra las otras categorías para mostrarlas si no hay productos
     const otherCategories = useMemo(
         () => categories.filter(c => c.slug !== slug),
         [categories, slug]
     );
     
-    // Identifica si es la categoría especial de pasteles personalizados
+    // identifica si es la categoría especial de pasteles personalizados
     const isCustomCategory = slug === 'personalizados';
 
-    // ⚠️ Ya NO necesitamos useEffect para cargar productos
     // Todo ya está en memoria desde DataContext
 
-    // ===== ERROR 404 (Categoría no encontrada) =====
-    // Si la categoría no existe y ya terminó de cargar, muestra error 404
+    //ERROR 404 Categoría no encontrada
+    // Si la categoría no existe y ya terminó de cargar muestra error 404
     if (!category && !loading) {
         return (
             <motion.div 
@@ -77,32 +75,31 @@ const CategoryPage: React.FC = () => {
         );
     }
 
-    // Migajas de pan para navegación (Inicio > Categoría actual)
+    // migajas de pan para navegación Inicio > Categoría actual
     const crumbs = [
         { label: 'Inicio', link: '/' },
-        { label: category?.name || '...' } // '?' porque category puede ser undefined mientras carga
+        { label: category?.name || '...' } // ? porque category puede ser undefined mientras carga
     ];
 
-    // ===== SKELETON LOADING (Carga inicial del catálogo completo) =====
-    // Muestra placeholders grises mientras carga desde el Context
+    // SKELETON LOADING mientras Carga inicial del catálogo completo
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8">
-                {/* Placeholder del título/breadcrumbs con animación de pulso de Framer */}
+                {/* placeholder del título/breadcrumbs con animación*/}
                 <motion.div 
                     className="h-8 bg-gray-200 rounded w-1/3 mb-10"
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}
                 />
                 
-                {/* Placeholder del banner con animación de pulso de Framer */}
+                {/*placeholder del banner con animación de pulso de framer */}
                 <motion.div 
                     className="h-64 bg-gray-200 rounded-2xl mb-8"
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}
                 />
                 
-                {/* Grid de 4 placeholders de productos con aparición escalonada (stagger) */}
+                {/* grid de 4 placeholders de productos */}
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                     {Array.from({ length: 4 }).map((_, index) => (
                         <motion.div 
@@ -112,7 +109,7 @@ const CategoryPage: React.FC = () => {
                             animate={{ opacity: 1 }}
                             transition={{ delay: index * 0.1 }}
                         >
-                            {/* Cuadro de imagen, texto y botón simulados */}
+                            {/* cuadro de imagen, texto y botón simulados */}
                             <div className="aspect-square w-full bg-gray-200 rounded-2xl mb-3"></div>
                             <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
                             <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -124,28 +121,28 @@ const CategoryPage: React.FC = () => {
         );
     }
 
-    // ===== RENDERIZADO PRINCIPAL DE LA CATEGORÍA =====
+    // RENDERIZADO PRINCIPAL DE LA CATEGORÍA
     return (
         <motion.div
-            // Animación de entrada general al cargar la categoría
+            // animación de entrada general al cargar la categoría
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             className="min-h-[80vh]"
         >
-            {/* Navegación breadcrumb */}
+            {/* navegación breadcrumb */}
             <Breadcrumbs crumbs={crumbs} />
             
-            {/* ===== HERO BANNER ===== */}
-            {/* Banner hero con imagen de fondo de la categoría y animación de revelado */}
+            {/* HERO BANNER*/}
+            {/* banner hero con imagen de fondo de la categoría */}
             <motion.section 
                 className="relative h-64 bg-cover bg-center flex items-center justify-center text-center text-white overflow-hidden" 
                 style={{ backgroundImage: `url(${category.image})` }}
-                initial={{ opacity: 0, scale: 1.1 }} // Comienza un poco más grande
-                animate={{ opacity: 1, scale: 1 }}   // Termina a escala normal
+                initial={{ opacity: 0, scale: 1.1 }} // comienza un poco más grande
+                animate={{ opacity: 1, scale: 1 }}   // termina a escala normal
                 transition={{ duration: 0.6 }}
             >
-                {/* Capa oscura sobre la imagen para que el texto se lea mejor */}
+                {/* capa oscura sobre la imagen */}
                 <motion.div 
                     className="absolute inset-0 bg-black/50"
                     initial={{ opacity: 0 }}
@@ -153,7 +150,7 @@ const CategoryPage: React.FC = () => {
                     transition={{ duration: 0.4 }}
                 />
                 
-                {/* Contenido del banner (encima de la capa oscura) con animación escalonada manual */}
+                {/* contenido del banner */}
                 <div className="relative z-10 p-4">
                     <motion.h1 
                         className="font-serif-display text-4xl md:text-5xl font-bold"
@@ -176,7 +173,7 @@ const CategoryPage: React.FC = () => {
             </motion.section>
 
             <div className="container mx-auto px-4 py-8">
-                {/* ===== BANNER ESPECIAL PARA PERSONALIZADOS (CTA) ===== */}
+                {/* BANNER ESPECIAL PARA PERSONALIZADOS */}
                 {isCustomCategory && (
                     <motion.div 
                         className="mb-8 p-6 rounded-2xl bg-accent/20 text-center"
@@ -202,7 +199,7 @@ const CategoryPage: React.FC = () => {
                             Estos son algunos ejemplos de lo que podemos crear, pero el límite es tu imaginación. ¡Diseña tu propio pastel desde cero!
                         </motion.p>
                         
-                        {/* Botón que lleva al editor de pasteles con animación de aparición */}
+                        {/* botón que lleva al editor de pasteles */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -219,9 +216,8 @@ const CategoryPage: React.FC = () => {
                     </motion.div>
                 )}
 
-                {/* ⚠️ Ya NO hay skeleton de productos porque ya están cargados */}
                 {products.length > 0 ? (
-                    // ===== HAY PRODUCTOS: Mostrar grid con animación escalonada (Stagger) =====
+                    // si hay productos se muestran en el grid
                     <>
                         {/* Contador de productos */}
                         <motion.div 
@@ -237,16 +233,16 @@ const CategoryPage: React.FC = () => {
                             </p>
                         </motion.div>
                         
-                        {/* Grid responsivo de productos. key={slug} fuerza la reanimación al cambiar de categoría. */}
+                        {/* grid responsivo de productos*/}
                         <motion.div 
                             key={slug} 
                             className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
-                            variants={staggerContainer} // Contenedor Stagger
+                            variants={staggerContainer} // contenedor stagger
                             initial="hidden"
-                            animate="visible" // Se activa al cambiar el slug
+                            animate="visible" // se activa al cambiar el slug
                         >
                             {products.map((product) => (
-                                // Cada producto utiliza la variante de item para aparecer escalonadamente
+                                // cada producto utiliza la variante de item para aparecer escalonadamente
                                 <motion.div 
                                     key={product.id}
                                     variants={staggerItem}
@@ -257,14 +253,14 @@ const CategoryPage: React.FC = () => {
                         </motion.div>
                     </>
                 ) : (
-                    // ===== NO HAY PRODUCTOS: Estado vacío y sugerencias =====
+                    //no hay productos entonces muestra Estado vacío y sugerencias
                     <motion.div 
                         className="text-center py-10"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        {/* Ícono animado con rebote (spring) */}
+                        {/* icono animado con rebote */}
                         <motion.span 
                             className="material-symbols-outlined text-6xl text-text-secondary mb-4 block"
                             initial={{ scale: 0, rotate: -180 }}
@@ -296,7 +292,7 @@ const CategoryPage: React.FC = () => {
                             Aún estamos horneando nuevas creaciones para esta categoría.
                         </motion.p>
                         
-                        {/* Sección de sugerencias: muestra otras categorías */}
+                        {/* sección de sugerencias muestra otras categorías */}
                         <motion.div 
                             className="border-t pt-8"
                             initial={{ opacity: 0 }}
@@ -307,7 +303,7 @@ const CategoryPage: React.FC = () => {
                                 Mientras tanto, explora otras categorías:
                             </h4>
                             
-                            {/* Grid de otras categorías con animación Stagger */}
+                            {/* grid de otras categorías con animación */}
                             <motion.div 
                                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
                                 variants={staggerContainer}
@@ -315,7 +311,7 @@ const CategoryPage: React.FC = () => {
                                 animate="visible"
                             >
                                 {otherCategories.map((cat) => (
-                                    // Se aplica la animación a cada tarjeta de categoría
+                                    // animación a cada tarjeta de categoría
                                     <motion.div 
                                         key={cat.slug}
                                         variants={staggerItem}
@@ -333,22 +329,3 @@ const CategoryPage: React.FC = () => {
 };
 
 export default CategoryPage;
-
-/* ===== MEJORAS IMPLEMENTADAS =====
-
-✅ OPTIMIZACIÓN PRINCIPAL:
-- ELIMINADO: useEffect para fetchProductsByCategory
-- ELIMINADO: useState para products y loadingProducts
-- AGREGADO: useMemo para filtrar productos en memoria
-- RESULTADO: Navegación instantánea entre categorías (0ms vs 400ms)
-
-✅ RENDIMIENTO:
-- Carga inicial: 1 petición HTTP
-- Cambio de categoría: 0 peticiones (filtrado en memoria)
-- Complejidad: O(n) en memoria vs O(n) + latencia de red
-
-✅ UX:
-- Sin loading al cambiar de categoría
-- Transiciones más fluidas
-- Offline-first después de carga inicial
-*/

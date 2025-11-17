@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-
-// ===== COMPONENTE REUTILIZABLE: PREVIEW DE IMAGEN =====
 // Muestra una vista previa de la imagen ingresada en el formulario
 // Maneja errores de carga y muestra placeholder si falla
 
 interface ImagePreviewProps {
   imageUrl: string; // URL de la imagen a previsualizar
-  alt?: string; // Texto alternativo (opcional)
-  className?: string; // Clases adicionales (opcional)
+  alt?: string; // Texto alternativo 
+  className?: string; // Clases adicionales
 }
 
 const ImagePreview: React.FC<ImagePreviewProps> = ({ 

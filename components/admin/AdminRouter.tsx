@@ -10,7 +10,7 @@ import ProductFormPage from './ProductFormPage';
 const AdminRouter: React.FC = () => {
     return (
         <Routes>
-            {/* Ruta principal */}
+            {/* ruta principal del administrador */}
             <Route path="/" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="categories" element={<CategoryListPage />} />

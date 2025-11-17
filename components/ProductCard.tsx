@@ -1,53 +1,52 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion'; // Importación de Framer Motion
+import { motion, AnimatePresence } from 'framer-motion'; // Framer Motion
 import { Product as ProductType } from '../types';
 import { useCart } from '../context/CartContext';
 
-// ===== PRODUCT CARD CON FRAMER MOTION =====
-// Card de producto con animaciones fluidas y estados visuales claros
+// Card de producto
 
 const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
-    // Hooks y Estados
+    // hooks y estados
     const { addToCart } = useCart();
     const navigate = useNavigate();
-    // Estado para la animación del botón "añadido"
+    // estado para la animación del botón añadido
     const [isAdded, setIsAdded] = useState(false); 
     
-    // Información del producto (Lógica del archivo original)
-    // Obtiene el primer precio (si existe)
+    // información del producto 
+    // Obtiene el primer precio si existe
     const firstPrice = product.prices?.[0];
-    // Determina si el producto tiene múltiples opciones de precio/tamaño
+    // determina si el producto tiene múltiples opciones de precio
     const hasOptions = product.prices.length > 1;
-    // Identifica si es un pastel personalizado
+    // identifica si es un pastel personalizado | estos no tienen precio
     const isCustomCake = product.category === 'personalizados';
-    // Producto sin precio y que NO es personalizado (requiere cotización)
+    // producto sin precio y que NO es personalizado | como hay unos sin precio se pone para cotizarlo
     const noPriceAndNotCustom = !firstPrice && !isCustomCake;
     
-    // Determina si el producto se puede añadir directamente al carrito
-    // Condiciones: NO es personalizado, NO tiene opciones múltiples, SÍ tiene precio
+    // preguntar si el producto se puede añadir directamente al carrito
+    // este NO es personalizado NO tiene opciones múltiples SÍ tiene precio
     const canBeAddedDirectly = !isCustomCake && !hasOptions && !noPriceAndNotCustom && !!firstPrice;
 
-    // Maneja el clic en el botón (añadir al carrito o ir a detalles)
+    // maneja el clic en el botón al añadir al carrito o ir a detalles
     const handleActionClick = (e: React.MouseEvent) => {
         e.preventDefault(); // Evita que el Link del padre se active
-        if (isAdded) return; // No hace nada si ya se añadió (previene doble clic)
+        if (isAdded) return; // no hace nada si ya se añadió
 
         if (canBeAddedDirectly) {
-            // Si se puede añadir directamente, lo agrega al carrito
+            // si se puede añadir directamente lo agrega al carrito
             addToCart(product, firstPrice, 1);
             setIsAdded(true);
-            // Resetea el estado después de 2 segundos
+            // resetea el estado después de 2 segundos
             setTimeout(() => setIsAdded(false), 2000);
         } else {
-            // Si no, redirige a la página de detalles del producto
+            // redirige a la página de detalles del producto
             navigate(`/product/${product.id}`);
         }
     };
 
-    // Función que determina el texto, ícono y estilos del botón según el estado del producto
+    // función que determina el texto ícono y estilos del botón según el estado del producto
     const getButtonProps = () => {
-        // Si ya se añadió al carrito
+        // si ya se añadió al carrito
         if (isAdded) {
             return {
                 text: '¡Añadido!',
@@ -56,16 +55,16 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
             };
         }
         
-        // Si es un pastel personalizado
+        // si es un pastel personalizado
         if (isCustomCake) {
             return {
                 text: 'Ver Detalles',
-                icon: 'palette', // Ícono de paleta
+                icon: 'palette', // icono de paleta
                 classes: 'border-2 border-secondary text-secondary hover:bg-secondary hover:text-white',
             };
         }
         
-        // Si tiene múltiples opciones o no tiene precio
+        // si tiene múltiples opciones o no tiene precio
         if (hasOptions || noPriceAndNotCustom) {
             return {
                 text: 'Ver Opciones',
@@ -74,7 +73,7 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
             };
         }
 
-        // Caso por defecto: producto simple con un solo precio
+        // Caso por defecto de productos normales con precio
         return {
             text: 'Añadir',
             icon: 'add_shopping_cart',
@@ -82,30 +81,28 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
         };
     };
 
-    // Obtiene las propiedades del botón según el estado actual
+    // obtiene las propiedades del botón según el estado actual
     const buttonProps = getButtonProps();
 
     return (
-        // Contenedor principal de la Card, ahora es un 'motion.div'
+        // contenedor principal de productos pero con animaciones de motion
         <motion.div 
             className="flex flex-col h-full rounded-2xl bg-card-bg shadow-lg overflow-hidden"
-            // Hover: Se eleva (y: -8) y aumenta la sombra (reemplaza la clase hover:-translate-y-1 y hover:shadow-glow-secondary de Tailwind)
             whileHover={{ 
                 y: -8,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.15)" // Sombra más rica que la de Tailwind
+                boxShadow: "0 20px 40px rgba(0,0,0,0.15)" // Sombra 
             }}
-            // Transición general de la tarjeta (para y y sombra)
             transition={{ 
                 duration: 0.3,
                 ease: [0.25, 0.1, 0.25, 1]
             }}
         >
-            {/* ===== IMAGEN DEL PRODUCTO ===== */}
-            {/* Link a la página de detalles del producto */}
+            {/* IMAGEN DEL PRODUCTO*/}
+            {/* redireccioana a los detalles */}
             <Link to={`/product/${product.id}`} className="block relative overflow-hidden">
                 <motion.div 
                     className="aspect-square w-full relative"
-                    // Zoom al hacer hover en la card (reemplaza group-hover:scale-110)
+                    // zoom al hacer hover en la card
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.4 }}
                 >
@@ -113,11 +110,11 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
                         src={product.image} 
                         alt={product.name} 
                         loading="lazy" 
-                        // La transición de escala ahora la maneja el motion.div padre, no la imagen directamente
+                        // transición de escala
                         className="w-full h-full object-cover" 
                     />
                     
-                    {/* Overlay sutil que aparece en hover */}
+                    {/* overlay sutil que aparece en hover */}
                     <motion.div
                         className="absolute inset-0 bg-black/0"
                         whileHover={{ backgroundColor: "rgba(0,0,0,0.1)" }}
@@ -126,13 +123,13 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
                 </motion.div>
             </Link>
             
-            {/* ===== INFORMACIÓN DEL PRODUCTO ===== */}
+            {/* INFORMACIÓN DEL PRODUCTO */}
             <div className="flex-grow flex flex-col p-3">
                 {/* Nombre del producto */}
                 <Link to={`/product/${product.id}`} className="block">
                     <motion.h3 
                         className="font-bold text-md mt-1 line-clamp-2"
-                        // Cambio de color en hover
+                        // cambio de color hover
                         whileHover={{ color: "var(--secondary)" }}
                         transition={{ duration: 0.2 }}
                     >
@@ -140,34 +137,34 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
                     </motion.h3>
                 </Link>
                 
-                {/* Precio o indicador según el tipo de producto */}
+                {/* precio o indicador según el tipo de producto */}
                 <p className="text-sm text-secondary font-bold min-h-[20px] mb-3">
                     {isCustomCake 
                         ? 'Personalizable' 
                         : firstPrice 
-                            ? `$${firstPrice.price.toFixed(2)}${hasOptions ? ' (desde)' : ''}` // Muestra "desde" si hay múltiples precios
-                            : 'Consultar precio' // Sin precio disponible
+                            ? `$${firstPrice.price.toFixed(2)}${hasOptions ? ' (desde)' : ''}`
+                            : 'Consultar precio' // si no hay precio
                     }
                 </p>
                 
-                {/* Botón de acción con animación */}
+                {/* botón con animación */}
                 <motion.button 
                     onClick={handleActionClick} 
-                    disabled={isAdded} // Deshabilitado mientras muestra "¡Añadido!"
+                    disabled={isAdded} // deshabilitado mientras muestra ¡Añadido!
                     className={`mt-auto w-full flex items-center justify-center gap-2 rounded-full py-2 px-3 text-sm font-bold shadow-md transition-colors ${buttonProps.classes}`}
-                    // Hover: Se eleva un poco y agrega una sombra sutil
+                    // animacion
                     whileHover={{ 
                         y: -2,
                         boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
                     }}
-                    // Tap/Click: Efecto de "presionar"
+                    // Efecto de
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                 >
-                    {/* Animación del ícono: usa AnimatePresence para un switch animado de íconos (Añadir -> Check) */}
+                    {/* animación del ícono:*/}
                     <AnimatePresence mode="wait"> 
                         <motion.span 
-                            key={buttonProps.icon} // Clave para que AnimatePresence detecte el cambio de ícono
+                            key={buttonProps.icon} // clave para que AnimatePresence detecte ícono
                             className="material-symbols-outlined text-lg"
                             initial={{ scale: 0, rotate: -180 }}
                             animate={{ scale: 1, rotate: 0 }}
@@ -178,13 +175,13 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
                         </motion.span>
                     </AnimatePresence>
                     
-                    {/* Animación del texto: también usa AnimatePresence para un switch animado de texto (Añadir -> ¡Añadido!) */}
+                    {/* animación del texto */}
                     <AnimatePresence mode="wait">
                         <motion.span
-                            key={buttonProps.text} // Clave para detectar el cambio de texto
-                            initial={{ opacity: 0, y: 10 }} // Entra desde abajo
+                            key={buttonProps.text} // clave para detectar el cambio de texto
+                            initial={{ opacity: 0, y: 10 }} // entra desde abajo
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }} // Sale hacia arriba
+                            exit={{ opacity: 0, y: -10 }} // sale hacia arriba
                             transition={{ duration: 0.2 }}
                         >
                             {buttonProps.text}

@@ -2,10 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// VARIANTES DE ANIMACIÓN
-// ═══════════════════════════════════════════════════════════════════════════════
-
+// variantes de animacion de tarjetas
 const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (index: number) => ({
@@ -19,16 +16,12 @@ const cardVariants = {
     })
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// COMPONENTE PRINCIPAL
-// ═══════════════════════════════════════════════════════════════════════════════
-
+// Componente principal
 const AdminDashboard: React.FC = () => {
     return (
         <div className="animate-fadeIn max-w-4xl">
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* HEADER CON TÍTULO Y DESCRIPCIÓN */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            
+            {/* Header con título */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -41,15 +34,9 @@ const AdminDashboard: React.FC = () => {
                     Desde aquí puedes gestionar las categorías, productos y precios de tu catálogo.
                 </p>
             </motion.div>
-
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* GRID DE CARDS (1 col móvil, 2 cols desktop) */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* Grid de tarjetas | 1 col móvil 2 cols desktop */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                
-                {/* ─────────────────────────────────────────────────────────── */}
-                {/* CARD: Gestionar Categorías */}
-                {/* ─────────────────────────────────────────────────────────── */}
+                {/* Gestionar categorías */}
                 <motion.div
                     custom={0}
                     variants={cardVariants}
@@ -78,7 +65,7 @@ const AdminDashboard: React.FC = () => {
                                 </p>
                             </div>
                             
-                            {/* Flecha (oculta en móvil pequeño) */}
+                            {/* Flecha */}
                             <motion.span 
                                 className="hidden sm:block material-symbols-outlined text-text-secondary flex-shrink-0"
                                 whileHover={{ x: 5 }}
@@ -89,10 +76,7 @@ const AdminDashboard: React.FC = () => {
                         </div>
                     </Link>
                 </motion.div>
-                
-                {/* ─────────────────────────────────────────────────────────── */}
-                {/* CARD: Gestionar Productos */}
-                {/* ─────────────────────────────────────────────────────────── */}
+                {/* Gestionar productos */}
                 <motion.div
                     custom={1}
                     variants={cardVariants}
@@ -121,7 +105,7 @@ const AdminDashboard: React.FC = () => {
                                 </p>
                             </div>
                             
-                            {/* Flecha (oculta en móvil pequeño) */}
+                            {/* Flecha*/}
                             <motion.span 
                                 className="hidden sm:block material-symbols-outlined text-text-secondary flex-shrink-0"
                                 whileHover={{ x: 5 }}
@@ -133,10 +117,7 @@ const AdminDashboard: React.FC = () => {
                     </Link>
                 </motion.div>
             </div>
-
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* SECCIÓN OPCIONAL: Tips rápidos (nuevo) */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* Tips*/}
             <motion.div
                 className="mt-8 p-4 md:p-6 bg-blue-50 border border-blue-200 rounded-lg"
                 initial={{ opacity: 0, y: 20 }}
@@ -164,76 +145,3 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   MEJORAS IMPLEMENTADAS PARA RESPONSIVE
-   ═══════════════════════════════════════════════════════════════════════════════
-
-   ✅ TÍTULO:
-   - Responsive: text-3xl md:text-4xl
-   - Mejor legibilidad en móvil
-
-   ✅ DESCRIPCIÓN:
-   - Tamaño responsive: text-sm md:text-base
-   - Margin responsive: mb-6 md:mb-8
-
-   ✅ GRID:
-   - Gap responsive: gap-4 md:gap-6
-   - Más compacto en móvil
-
-   ✅ CARDS:
-   - Padding responsive: p-4 md:p-6
-   - Items-start en móvil (mejor alineación)
-   - Items-center en desktop
-
-   ✅ ÍCONOS:
-   - Padding responsive: p-2 md:p-3
-   - Tamaño responsive: text-2xl md:text-3xl
-   - flex-shrink-0 para mantener tamaño
-
-   ✅ CONTENIDO:
-   - flex-1 min-w-0 para prevenir overflow
-   - Título: text-lg md:text-xl
-   - Descripción: text-xs md:text-sm
-   - line-clamp-2 para limitar a 2 líneas
-
-   ✅ FLECHA:
-   - hidden sm:block (solo visible desde 640px)
-   - Animación con Framer Motion
-   - flex-shrink-0 para mantener posición
-
-   ✅ ANIMACIONES:
-   - Stagger animation en cards (delay 0.1s)
-   - Fade in del header
-   - Hover en flechas
-
-   ✅ NUEVA SECCIÓN:
-   - Tips rápidos con ícono de info
-   - Padding responsive
-   - Texto responsive
-   - Animación de entrada
-
-   ═══════════════════════════════════════════════════════════════════════════════
-   BREAKPOINTS
-   ═══════════════════════════════════════════════════════════════════════════════
-
-   📱 MÓVIL (<640px):
-   - 1 columna
-   - Sin flecha
-   - Padding p-4
-   - Texto más pequeño
-
-   📱 MÓVIL+ (640px-768px):
-   - 1 columna
-   - Con flecha
-   - Padding p-4
-   - Texto más pequeño
-
-   💻 DESKTOP (≥768px):
-   - 2 columnas
-   - Con flecha animada
-   - Padding p-6
-   - Texto normal
-
-   ═══════════════════════════════════════════════════════════════════════════════
-*/

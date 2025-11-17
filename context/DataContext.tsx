@@ -1,56 +1,41 @@
 //Maneja los datos globales de la aplicación, específicamente las
-//categorías y productos. Se cargan UNA VEZ al inicio y están disponibles en
-//toda la app sin necesidad de cargarlas de nuevo.
+//categorías y productos. Se cargan UNA VEZ al inicio y están disponibles
+//osea no se carga todo de nuevo
 
 import React, { 
-  createContext, // Para crear el contexto (estado global)
-  useState, // Para manejar los estados: categories, loading o error
-  useContext, // Para consumir el contexto en otros componentes
-  ReactNode, // Tipo para los componentes hijos
-  useEffect // Para ejecutar código (cargar datos)
+  createContext, // para crear el contexto en estado global
+  useState, // para manejar los estados: categories, loading o error
+  useContext, // para consumir el contexto en otros componentes
+  ReactNode, // tipo para los componentes hijos
+  useEffect // para ejecutar código y cargar datos
 } from 'react';
-import { Category, Product, CatalogoInicial } from '../types'; // Tipos
-import { fetchInitialCatalog } from '../services/api'; // ⚡ Nueva función optimizada
+import { Category, Product, CatalogoInicial } from '../types'; // tipos isea las interfaces
+import { fetchInitialCatalog } from '../services/api'; // trae todo el catalogo
 
 
 //DEFINICIÓN DE TIPOS
-
 // tipo de datos a trabajar
 interface DataContextType {
-  categories: Category[];        // Lista de todas las categorías activas
-  allProducts: Product[];        // ⚡ NUEVO: Todos los productos activos
-  seasonalProducts: Product[];   // ⚡ NUEVO: Productos de temporada
-  loading: boolean;              // mientras carga los contenidos
-  error: string | null;          // Mensaje de error
+  categories: Category[]; // lista de todas las categorías activas
+  allProducts: Product[]; // todos los productos activos
+  seasonalProducts: Product[]; // productos de temporada
+  loading: boolean; // mientras carga los contenidos
+  error: string | null; // mensaje de error
 }
 
 // CREACIÓN DEL CONTEXTO
 // se crea indefinido al inicio porque no hay provider activo
-
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 // PROVIDER DEL CONTEXTO
 // envuelve componentes y provee las categorías y productos
-
-
-/** 
- * En App.tsx:
- * <DataProvider>
- *   <Header />         Puede usar useData() para mostrar categorías
- *   <HomePage />       Puede usar useData() para mostrar productos
- *   <CategoryPage />   Puede usar useData() para filtrar productos
- *   <ProductDetailPage />  Puede usar useData() para buscar productos
- * </DataProvider>
- * 
- * //param children - Todos los componentes hijos que podrán usar useData()
- */
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // ESTADOS DEL COMPONENTE | se almacena el estado para las categorías y productos
   // son arrays vacíos que se llenan con los datos de la api
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [allProducts, setAllProducts] = useState<Product[]>([]); // ⚡ NUEVO
-  const [seasonalProducts, setSeasonalProducts] = useState<Product[]>([]); // ⚡ NUEVO
+  const [allProducts, setAllProducts] = useState<Product[]>([]); // todos los productos
+  const [seasonalProducts, setSeasonalProducts] = useState<Product[]>([]); // productos de temporada
   
   // mientras carga el catálogo es true la carga y es false cuando ya hay información o hay un error
   const [loading, setLoading] = useState(true);
@@ -58,36 +43,26 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // estado de error es donde tira un mensaje | tira mensaje de error o null
   const [error, setError] = useState<string | null>(null);
 
-  // ⚡ CARGAR EL CATÁLOGO COMPLETO
+  // CARGAR EL CATÁLOGO COMPLETO
   // useEffect es para ejecutar después del render del componente
-  // se ejecuta una vez aquí en vez del componente para ahorrar peticiones http
+  // se ejecuta del componente para ahorrar peticiones http
   // todos los componentes tienen los mismos datos de consistencia, lo hace más rápido
-  // AHORA: Una sola petición HTTP trae categorías + productos + temporada
-
   useEffect(() => {
-    
     //es una petición asincrona
     const loadCatalog = async () => {
       try {
         // al iniciar la petición se carga el loading
         setLoading(true);
-        
-        // ⚡ UNA SOLA PETICIÓN para todo el catálogo
-        // Esta función llama a /api/Catalogo/inicial que devuelve:
-        // - categories: todas las categorías activas
-        // - products: todos los productos activos
-        // - seasonal: productos de temporada
+        // Esta función llama a /api/Catalogo/inicial | trae categorias, productos y de temporada
         const catalog: CatalogoInicial = await fetchInitialCatalog();
         
         // guardar las categorías en el estado
         setCategories(catalog.categories);
         
-        // ⚡ NUEVO: guardar todos los productos en el estado
-        // Ahora CategoryPage y ProductDetailPage pueden filtrar en memoria
+        // guardar todos los productos en el estado
         setAllProducts(catalog.products);
         
-        // ⚡ NUEVO: guardar productos de temporada en el estado
-        // HomePage los usa directamente sin hacer peticiones adicionales
+        // guardar productos de temporada en el estado
         setSeasonalProducts(catalog.seasonal);
         
         // limpiar si hay errores
@@ -106,10 +81,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     };
 
-    // Ejecutar la función de carga
+    // ejecutar la función de carga
     loadCatalog();
     
-  }, []); // Array vacío = ejecutar solo al iniciar
+  }, []); // array vacío = ejecutar solo al iniciar
 
   // OPTIMIZACIÓN CON USEMEMO
   // este es para evitar re-renders innecesarios
@@ -118,8 +93,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const value = React.useMemo(() => ({ 
     categories, 
-    allProducts,        // ⚡ NUEVO
-    seasonalProducts,   // ⚡ NUEVO
+    allProducts,
+    seasonalProducts,
     loading, 
     error 
   }), [categories, allProducts, seasonalProducts, loading, error]);
@@ -127,8 +102,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // RENDERIZAR EL PROVIDER
   // este da valor a los componentes hijos
   // cualquier componente que tenga categories, allProducts, seasonalProducts, loading, error
-  // puede obtener acceso a estos datos
-
+  // puede obtener acceso a estos datos 
   return (
     <DataContext.Provider value={value}>
       {children}
@@ -138,49 +112,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 // HOOK PERSONALIZADO PARA CONSUMIR EL CONTEXTO
 // simplificar el uso del contexto y agregar validación
-
 export const useData = () => {
-  // Intentar obtener el contexto
+  // intenta obtener el contexto
   const context = useContext(DataContext);
-  
-  // Si context es undefined, significa que no hay DataProvider
-  if (context === undefined) {
-    throw new Error(
-      'useData must be used within a DataProvider. ' +
-      'Asegúrate de que tu componente esté envuelto en <DataProvider>.'
-    );
-  }
-  
-  // Devolver el contexto (categories, allProducts, seasonalProducts, loading, error)
+  // devolver el contexto categories, allProducts, seasonalProducts, loading, error
   return context;
 };
-
-
-/*
-// ⚡ Ejemplo NUEVO: CategoryPage filtrando en memoria (SIN peticiones HTTP)
-import { useData } from '../context/DataContext';
-import { useParams } from 'react-router-dom';
-
-const CategoryPage = () => {
-  const { slug } = useParams();
-  const { categories, allProducts, loading } = useData();
-
-  // ⚡ Filtrar productos en memoria (instantáneo, 0ms)
-  const category = categories.find(c => c.slug === slug);
-  const products = allProducts.filter(p => p.category === slug);
-
-  if (loading) return <div>Cargando...</div>;
-
-  return (
-    <div>
-      <h2>{category?.name}</h2>
-      <div className="grid">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-*/

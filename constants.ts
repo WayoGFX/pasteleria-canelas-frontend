@@ -1,7 +1,7 @@
 import { Category, Product, CustomCakeSection } from './types';
 
 export const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER; // numero telefono
-export const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME; // nombre del negocio
+export const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME; // nombre de la empresa
 
 export const TESTIMONIALS = [
   {
@@ -21,8 +21,7 @@ export const TESTIMONIALS = [
   },
 ];
 
-// NOTE: Estas imágenes usan un servicio placeholder para simular capas PNG transparentes.
-// En una aplicación real, se reemplazarían con archivos PNG de capas de pastel reales.
+
 export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'size',
@@ -36,7 +35,6 @@ export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'shape',
     name: 'Forma del Pastel',
-    // La forma es una elección conceptual; el color base proviene de la selección de 'sabor'.
     options: [
       { id: 'round', name: 'Redondo', image: 'https://placehold.co/500x500/00000000/00000000?text=invisible' },
       { id: 'square', name: 'Cuadrado', image: 'https://placehold.co/500x500/00000000/00000000?text=invisible' },
@@ -46,7 +44,6 @@ export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'flavor',
     name: 'Sabor del Pan',
-    // Esta capa define el color base del pastel.
     options: [
       { id: 'vanilla', name: 'Vainilla', image: 'https://placehold.co/500x500/F3E5AB/3A2413?text=Pan+Vainilla' },
       { id: 'chocolate', name: 'Chocolate', image: 'https://placehold.co/500x500/5C4033/FFFFFF?text=Pan+Chocolate' },
@@ -57,7 +54,6 @@ export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'syrup',
     name: 'Remojo (Tres Leches)',
-    // Una capa semitransparente para simular el remojo del pastel.
     options: [
        { id: 'no-syrup', name: 'Sin Remojo', image: 'https://placehold.co/500x500/00000000/00000000?text=invisible' },
        { id: 'traditional', name: 'Tradicional', image: 'https://placehold.co/500x500/FFFFFF40/3A2413?text=Remojo' },
@@ -68,7 +64,6 @@ export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'filling',
     name: 'Relleno',
-    // Una capa semitransparente para representar el color del relleno.
     options: [
       { id: 'dulce-de-leche', name: 'Dulce de Leche', image: 'https://placehold.co/500x500/C3834C70/FFFFFF?text=Relleno' },
       { id: 'strawberry-jam', name: 'Mermelada de Fresa', image: 'https://placehold.co/500x500/DE316370/FFFFFF?text=Relleno' },
@@ -79,7 +74,6 @@ export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'frosting',
     name: 'Cobertura',
-    // Una capa superior casi opaca que representa la cobertura.
     options: [
       { id: 'buttercream', name: 'Buttercream', image: 'https://placehold.co/500x500/F0FFF0E6/3A2413?text=Cobertura' },
       { id: 'meringue', name: 'Merengue Italiano', image: 'https://placehold.co/500x500/FFFFFFE6/3A2413?text=Cobertura' },

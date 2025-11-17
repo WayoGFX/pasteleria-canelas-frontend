@@ -1,37 +1,19 @@
-// ═══════════════════════════════════════════════════════════════════════════════
-// ARCHIVO: components/admin/IconPicker.tsx
+// components/admin/IconPicker.tsx
 // PROPÓSITO: Selector de íconos Material Symbols con preview y sugerencias
-// ═══════════════════════════════════════════════════════════════════════════════
-
 import React, { useState } from 'react';
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // TIPOS
-// ═══════════════════════════════════════════════════════════════════════════════
-
 interface IconPickerProps {
-    /** Valor actual del ícono (nombre del Material Symbol) */
+    //Valor actual del ícono nombre del Material Symbol
     value: string;
-    /** Función para actualizar el valor */
+    // actualizar valor
     onChange: (iconName: string) => void;
-    /** ID del input (para label) */
+    // id del input
     id?: string;
-    /** Nombre del input (para formularios) */
+    // nombre del input para formularios
     name?: string;
 }
-
-// ═══════════════════════════════════════════════════════════════════════════════
 // ÍCONOS SUGERIDOS PARA PASTELERÍA
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * Lista de íconos populares para categorías de pastelería
- * 
- * Cada objeto tiene:
- * - name: Nombre técnico del ícono en Material Symbols
- * - label: Nombre amigable para mostrar al usuario
- * - category: Tipo de categoría (para organizar)
- */
 const POPULAR_ICONS = [
     // Pasteles y postres
     { name: 'cake', label: 'Pastel', category: 'Dulces' },
@@ -62,57 +44,32 @@ const POPULAR_ICONS = [
     { name: 'egg', label: 'Huevo', category: 'Ingredientes' },
 ];
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENTE PRINCIPAL
-// ═══════════════════════════════════════════════════════════════════════════════
-
 const IconSelector: React.FC<IconPickerProps> = ({ 
     value, 
     onChange, 
     id = 'icono', 
     name = 'icono' 
 }) => {
-    
-    // ───────────────────────────────────────────────────────────────────────────
     // ESTADOS
-    // ───────────────────────────────────────────────────────────────────────────
-    
-    /** Controla si el panel de sugerencias está abierto */
+    // Controla si el panel de sugerencias está abierto
     const [showSuggestions, setShowSuggestions] = useState(false);
-    
-    // ───────────────────────────────────────────────────────────────────────────
     // MANEJADORES
-    // ───────────────────────────────────────────────────────────────────────────
-    
-    /**
-     * Manejar cambio manual del input
-     */
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
     };
-    
-    /**
-     * Seleccionar un ícono de las sugerencias
-     */
+    // seleccionar icono de las sugerencias
     const handleIconSelect = (iconName: string) => {
         onChange(iconName);
         setShowSuggestions(false); // Cerrar panel al seleccionar
     };
-    
-    // ───────────────────────────────────────────────────────────────────────────
     // RENDER
-    // ───────────────────────────────────────────────────────────────────────────
-    
     return (
         <div className="space-y-3">
-            {/* Label */}
             <label htmlFor={id} className="block text-sm font-medium text-text-primary">
                 Ícono (Material Symbol)
             </label>
-            
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* Input con Preview del Ícono */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* input con preview del icono */}
             <div className="flex gap-3 items-center">
                 {/* Input de texto */}
                 <div className="flex-1">
@@ -128,7 +85,7 @@ const IconSelector: React.FC<IconPickerProps> = ({
                     />
                 </div>
                 
-                {/* Preview del ícono en tiempo real */}
+                {/* preview del icono en tiempo real*/}
                 <div className="flex-shrink-0 w-16 h-16 border-2 border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
                     {value ? (
                         <span 
@@ -144,10 +101,7 @@ const IconSelector: React.FC<IconPickerProps> = ({
                     )}
                 </div>
             </div>
-            
-            {/* ═══════════════════════════════════════════════════════════════ */}
             {/* Botón para mostrar sugerencias */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
             <button
                 type="button"
                 onClick={() => setShowSuggestions(!showSuggestions)}
@@ -158,10 +112,7 @@ const IconSelector: React.FC<IconPickerProps> = ({
                 </span>
                 {showSuggestions ? 'Ocultar sugerencias' : 'Ver íconos sugeridos'}
             </button>
-            
-            {/* ═══════════════════════════════════════════════════════════════ */}
-            {/* Panel de Sugerencias */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* Panel de sugerencias */}
             {showSuggestions && (
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-4 animate-fadeIn">
                     {/* Texto explicativo */}
@@ -169,7 +120,7 @@ const IconSelector: React.FC<IconPickerProps> = ({
                         Haz clic en un ícono para seleccionarlo:
                     </p>
                     
-                    {/* Grid de íconos sugeridos */}
+                    {/*íconos sugeridos */}
                     <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
                         {POPULAR_ICONS.map(icon => (
                             <button
@@ -197,10 +148,7 @@ const IconSelector: React.FC<IconPickerProps> = ({
                             </button>
                         ))}
                     </div>
-                    
-                    {/* ═══════════════════════════════════════════════════════ */}
-                    {/* Link a Material Symbols */}
-                    {/* ═══════════════════════════════════════════════════════ */}
+                    {/* link a Material Symbols */}
                     <div className="pt-3 border-t border-gray-200">
                         <a 
                             href="https://fonts.google.com/icons?icon.set=Material+Symbols&icon.style=Outlined" 

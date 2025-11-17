@@ -6,7 +6,7 @@ import { useData } from '../context/DataContext';
 // Importar variantes de animación
 import { viewportConfig } from '../utils/animations';
 
-// ===== VARIANTES DE ANIMACIÓN PARA FOOTER =====
+// VARIANTES DE ANIMACIÓN
 const columnVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: (index: number) => ({
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
     }
   ];
 
-  // Array de links de navegación para la columna 2
+  // Array de links de navegación 
   const navLinks = [
     { to: '/', label: 'Inicio' },
     ...categories.map(cat => ({
@@ -78,7 +78,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           
-          {/* Columna 1: Marca y Redes Sociales */}
+          {/* Columna 1 Marca y Redes Sociales */}
           <motion.div
             custom={0}
             variants={columnVariants}
@@ -128,7 +128,7 @@ const Footer: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Columna 2: Navegación */}
+          {/* Columna 2 de Navegación */}
           <motion.div
             custom={1}
             variants={columnVariants}
@@ -166,7 +166,7 @@ const Footer: React.FC = () => {
             </ul>
           </motion.div>
 
-          {/* Columna 3: Contacto y Horarios */}
+          {/* Columna 3 de Contacto y Horarios */}
           <motion.div
             custom={2}
             variants={columnVariants}
@@ -194,10 +194,10 @@ const Footer: React.FC = () => {
               
               <motion.p whileHover={{ x: 2 }}>
                 <a 
-                  href="tel:+521234567890" 
+                  href="tel:+50373264065" 
                   className="hover:text-white transition-colors"
                 >
-                  (123) 456-7890
+                  (503) 7326-4065
                 </a>
               </motion.p>
               
@@ -206,7 +206,7 @@ const Footer: React.FC = () => {
                 whileHover={{ x: 2 }}
                 transition={{ duration: 0.2 }}
               >
-                Lunes a Sábado: 9am - 8pm
+                Lunes a Domingo: 7am - 6pm
               </motion.p>
             </motion.div>
           </motion.div>
@@ -232,62 +232,3 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
-
-/* ===== MEJORAS IMPLEMENTADAS CON FRAMER MOTION =====
-
-✅ COLUMNAS:
-- Stagger animation (aparecen una por una con delay 0.15s)
-- Slide up + fade in desde abajo
-- viewport observer para animar al hacer scroll
-
-✅ COLUMNA 1 (Marca):
-- Logo con hover scale 1.05
-- Descripción con fade in
-- Redes sociales con spring animation
-- Íconos escalan 1.2 + rotan 5° en hover
-
-✅ COLUMNA 2 (Navegación):
-- Links con stagger (delay 0.05s cada uno)
-- Slide desde la izquierda + fade
-- Hover: Se mueven 3px a la derecha
-
-✅ COLUMNA 3 (Contacto):
-- Info con fade in
-- Items se mueven ligeramente en hover (x: 2px)
-- Teléfono con hover effect
-
-✅ COPYRIGHT:
-- Fade + slide up con delay
-- Aparece después de las columnas
-
-===== ANIMACIONES ESPECÍFICAS =====
-
-1. COLUMNAS CON STAGGER:
-   - Delay: index * 0.15s
-   - Columna 1: 0s
-   - Columna 2: 0.15s
-   - Columna 3: 0.30s
-
-2. REDES SOCIALES:
-   - Spring animation (pop effect)
-   - Hover: scale 1.2 + rotate 5°
-   - Tap: scale 0.9
-
-3. LINKS DE NAVEGACIÓN:
-   - Stagger interno: delay 0.05s
-   - Hover: slide derecha 3px
-
-4. VIEWPORT OBSERVER:
-   - Anima solo cuando el footer es visible
-   - once: false (se puede re-animar)
-   - amount: 0.3 (30% visible para activar)
-
-===== MANTIENE =====
-
-✅ Todos los comentarios originales
-✅ Estructura del código
-✅ Links dinámicos de categorías
-✅ Estilos y colores originales
-✅ Responsividad
-
-*/

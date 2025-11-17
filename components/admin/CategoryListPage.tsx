@@ -1,3 +1,4 @@
+// clases necesarias
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchAdminCategories, deleteCategory } from '../../services/api';

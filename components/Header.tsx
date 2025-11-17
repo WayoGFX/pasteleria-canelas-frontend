@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useData } from '../context/DataContext';
 
-// ===== VARIANTES DE ANIMACIÓN PARA FRAMER MOTION =====
+// VARIANTES DE ANIMACIÓN PARA FRAMER MOTION
 const menuOverlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
@@ -62,36 +62,36 @@ const cartBadgeVariants = {
 };
 
 const Header: React.FC = () => {
-  // Obtiene funciones y estado del carrito
+  // obtiene funciones y estado del carrito
   const { toggleCart, cartCount, isCartAnimating } = useCart();
   
-  // Obtiene las categorías desde el Context (para generar los links dinámicamente)
+  // obtiene las categorías desde el Context para generar los links dinámicamente
   const { categories } = useData();
   
-  // Estado para controlar si el menú móvil está abierto
+  // estado para controlar si el menú móvil está abierto
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Estado para detectar si el usuario ha hecho scroll (cambia el estilo del header)
+  // estado para detectar si el usuario ha hecho scroll cambia el estilo del header
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // ===== Estado para controlar si el header debe estar visible =====
+  //  estado para controlar si el header debe estar visible
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // ===== Detecta dirección del scroll para mostrar/ocultar header =====
+  // detecta dirección del scroll para mostrar/ocultar header
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Si estás en el top (menos de 10px), siempre muestra el header
+      // Si el top es menos de 10 muestra el header
       if (currentScrollY < 10) {
         setIsScrolled(false);
         setIsVisible(true);
       } else {
         setIsScrolled(true);
         
-        // Si scrolleas hacia abajo, oculta el header
-        // Si scrolleas hacia arriba, muéstralo
+        // scroll que oculta el header
+        // scroll arriba lo muestra
         if (currentScrollY > lastScrollY && currentScrollY > 80) {
           setIsVisible(false); // Scrolling down
         } else if (currentScrollY < lastScrollY) {
@@ -102,17 +102,17 @@ const Header: React.FC = () => {
       setLastScrollY(currentScrollY);
     };
 
-    // { passive: true } mejora el performance del scroll
+    // passive: true  mejora el performance del scroll
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Limpia el listener cuando el componente se desmonta
+    // limpia el listener cuando el componente se desmonta
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]); // Se ejecuta cada vez que cambia lastScrollY
+  }, [lastScrollY]); // se ejecuta cada vez que cambia lastScrollY
 
-  // Componente reutilizable para los links de navegación
-  // Se usa tanto en desktop como en el menú móvil
+  // componente reutilizable para los links de navegación
+  // se usa tanto en desktop y en el menú móvil
   const NavLinks: React.FC<{ onLinkClick?: () => void; isMobile?: boolean }> = ({ onLinkClick, isMobile = false }) => {
     // Array de links estáticos
     const staticLinks = [
@@ -122,7 +122,7 @@ const Header: React.FC = () => {
       { to: '/admin', label: 'Admin' }
     ];
 
-    // Combina categorías con links estáticos
+    // combina categorías con links estáticos
     const allLinks = [
       staticLinks[0], // Inicio
       ...categories.map(category => ({
@@ -130,7 +130,7 @@ const Header: React.FC = () => {
         label: category.name,
         key: category.slug
       })),
-      ...staticLinks.slice(1) // Nosotros, Contacto, Admin
+      ...staticLinks.slice(1) // nosotros, Contacto, Admin | los demás
     ];
 
     return (
@@ -144,11 +144,11 @@ const Header: React.FC = () => {
             animate={isMobile ? "visible" : undefined}
           >
             <NavLink 
-              onClick={onLinkClick} // Cierra el menú móvil al hacer clic
-              end={link.end} // "end" hace que solo se active en la ruta exacta "/"
+              onClick={onLinkClick} // cierra el menú móvil al hacer clic
+              end={link.end} // end hace que solo se active en la ruta exacta "/"
               className={({isActive}) => 
                 `hover:text-text-primary transition-all duration-200 ease-in-out hover:-translate-y-px whitespace-nowrap ${
-                  isActive ? 'text-text-primary font-bold' : '' // Si está activo, se pone negrita
+                  isActive ? 'text-text-primary font-bold' : '' // si está activo, se pone negrita
                 }`
               } 
               to={link.to}
@@ -163,13 +163,13 @@ const Header: React.FC = () => {
 
   return (
     <>
-      {/* ===== HEADER CON AUTO-HIDE Y RESPONSIVE MEJORADO ===== */}
-      {/* Header sticky con animación de entrada/salida según scroll */}
+      {/* HEADER CON AUTO-HIDE Y RESPONSIVE */}
+      {/* Header sticky con animación de entrada/salida por scroll */}
       <motion.header 
         className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
-          isScrolled ? 'bg-primary shadow-md' : 'bg-primary' // Agrega sombra al scrollear
+          isScrolled ? 'bg-primary shadow-md' : 'bg-primary' // agrega sombra al scrollear
         }`}
-        // Animación de mostrar/ocultar según scroll
+        // aanimación de mostrar/ocultar según scroll
         animate={{ 
           y: isVisible ? 0 : -100,
           opacity: isVisible ? 1 : 0
@@ -179,12 +179,11 @@ const Header: React.FC = () => {
           ease: "easeInOut" 
         }}
       >
-        {/* ===== NUEVO: Container con max-width y padding responsive ===== */}
         <div className="w-full max-w-[1400px] mx-auto flex items-center justify-between px-3 py-3 md:px-4 md:py-4 lg:px-6">
           
-          {/* Sección izquierda: botón menú móvil + logo */}
+          {/* Sección botón menú móvil y logo */}
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-            {/* Botón hamburguesa (visible hasta lg breakpoint para mejor UX) */}
+            {/* botón hamburguesa */}
             <motion.button 
               onClick={() => setIsMenuOpen(true)} 
               className="lg:hidden text-text-primary"
@@ -195,7 +194,7 @@ const Header: React.FC = () => {
                 <span className="material-symbols-outlined text-2xl md:text-3xl">menu</span>
             </motion.button>
             
-            {/* Logo/nombre de la tienda - Responsive */}
+            {/* nombre */}
             <motion.h1 
               className="font-serif-display text-xl md:text-2xl lg:text-3xl font-bold text-text-primary"
               whileHover={{ scale: 1.02 }}
@@ -205,19 +204,12 @@ const Header: React.FC = () => {
             </motion.h1>
           </div>
           
-          {/* ===== NAVEGACIÓN DESKTOP CON MEJOR ESPACIADO ===== */}
-          {/* 
-            CAMBIOS CLAVE:
-            - Oculto hasta lg (1024px) en lugar de md (768px)
-            - Espaciado reducido: space-x-6 → space-x-3 lg:space-x-4 xl:space-x-6
-            - Texto más pequeño: text-sm lg:text-base
-            - flex-wrap para evitar overflow
-          */}
+          {/* NAVEGACIÓN DESKTOP */}
           <nav className="hidden lg:flex items-center space-x-3 xl:space-x-4 text-text-secondary text-sm xl:text-base flex-wrap justify-center flex-1 mx-4">
             <NavLinks />
           </nav>
           
-          {/* Botón del carrito (siempre visible) con tamaño responsive */}
+          {/* botón del carrito */}
           <div className="flex-shrink-0">
             <motion.button 
               onClick={toggleCart} 
@@ -226,10 +218,10 @@ const Header: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               aria-label="Abrir carrito de compras"
             >
-              {/* Ícono del carrito con animación cuando se agrega algo */}
+              {/* icono del carrito */}
               <motion.span 
                 className={`material-symbols-outlined text-2xl md:text-3xl ${
-                  isCartAnimating ? 'animate-jiggle' : '' // Animación de "sacudida"
+                  isCartAnimating ? 'animate-jiggle' : '' // Animación
                 }`}
                 animate={isCartAnimating ? {
                   rotate: [0, -10, 10, -10, 10, 0],
@@ -240,7 +232,7 @@ const Header: React.FC = () => {
                 shopping_cart
               </motion.span>
               
-              {/* Badge con el número de productos (solo si hay productos) */}
+              {/* badge con el número de productos */}
               <AnimatePresence>
                 {cartCount > 0 && (
                   <motion.span 
@@ -267,7 +259,7 @@ const Header: React.FC = () => {
         </div>
       </motion.header>
       
-      {/* ===== MENÚ MÓVIL (SIDEBAR LATERAL) ===== */}
+      {/* MENÚ MÓVIL */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
@@ -276,19 +268,19 @@ const Header: React.FC = () => {
             animate="visible"
             exit="exit"
           >
-              {/* Capa oscura de fondo (overlay) */}
+              {/* Capa oscura de fondo */}
               <motion.div 
                 className="absolute inset-0 bg-black/50"
                 variants={menuOverlayVariants}
                 onClick={() => setIsMenuOpen(false)} // Cierra al hacer clic afuera
               />
               
-              {/* Panel lateral del menú */}
+              {/* menú panel */}
               <motion.div 
                 className="relative z-10 h-full w-72 sm:w-80 bg-primary shadow-2xl overflow-y-auto"
                 variants={menuSidebarVariants}
               >
-                  {/* Header del menú móvil */}
+                  {/* header menú móvil */}
                   <motion.div 
                     className="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-primary z-10"
                     initial={{ opacity: 0, y: -10 }}
@@ -297,7 +289,7 @@ const Header: React.FC = () => {
                   >
                       <h2 className="font-serif-display text-xl font-bold text-text-primary">Menú</h2>
                       
-                      {/* Botón X para cerrar */}
+                      {/* botón para cerrar */}
                       <motion.button 
                         onClick={() => setIsMenuOpen(false)} 
                         className="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -309,9 +301,9 @@ const Header: React.FC = () => {
                       </motion.button>
                   </motion.div>
                   
-                  {/* Links de navegación en columna */}
+                  {/* links de navegación en columna */}
                   <nav className="flex flex-col space-y-4 p-4 text-text-secondary text-lg">
-                      {/* Reutiliza el mismo componente NavLinks, pero cierra el menú al hacer clic */}
+                      {/* es el mismo componente */}
                       <NavLinks onLinkClick={() => setIsMenuOpen(false)} isMobile={true} />
                   </nav>
               </motion.div>

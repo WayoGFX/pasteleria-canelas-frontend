@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { BUSINESS_NAME, WHATSAPP_NUMBER } from '../constants';
 
-// ===== VARIANTES DE ANIMACIÓN PARA FRAMER MOTION =====
+//VARIANTES DE ANIMACIÓN
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
@@ -79,46 +79,46 @@ const modalVariants = {
 };
 
 const Cart: React.FC = () => {
-    // Obtiene todas las funciones y estados del carrito desde el Context
+    // obtiene todas las funciones y estados del carrito desde el Context
     const { isCartOpen, toggleCart, cartItems, updateQuantity, totalPrice, removeFromCart, clearCart } = useCart();
     
-    // Estado local para las notas del pedido (opcional)
+    // estado local para las notas del pedido (opcional)
     const [orderNotes, setOrderNotes] = useState('');
     
-    // Estado para mostrar/ocultar el modal de confirmación antes de ir a WhatsApp
+    // estado para mostrar/ocultar el modal de confirmación antes de ir a WhatsApp
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    // ===== FUNCIÓN: GENERAR MENSAJE DE WHATSAPP =====
+    // GENERAR MENSAJE DE WHATSAPP 
     const generateWhatsAppMessage = () => {
-        // Construye el mensaje con formato
+        // construye el mensaje con formato
         let message = `¡Hola ${BUSINESS_NAME}! Me gustaría hacer un pedido:\n\n`;
         
-        // Agrega cada item del carrito
+        // agrega cada item del carrito
         cartItems.forEach(item => {
             message += `- ${item.quantity} x ${item.name} (${item.selectedPrice.size})\n`;
         });
 
-        // Si hay notas adicionales, las agrega
+        // si hay notas adicionales, las agrega
         if (orderNotes.trim()) {
             message += `\n*Notas Adicionales:*\n${orderNotes.trim()}\n`;
         }
         
-        // Agrega el total al final
+        // agrega el total al final
         message += `\n*Total: $${totalPrice.toFixed(2)}*\n\n¡Muchas gracias!`;
 
-        // Codifica el mensaje para URL y abre WhatsApp
+        // codifica el mensaje para URL y abre WhatsApp
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
     };
 
-    // Muestra el modal de confirmación antes de enviar a WhatsApp
+    // muestra el modal de confirmación antes de enviar a WhatsApp
     const handleFinalizeOrder = () => {
         setShowConfirmationModal(true);
     };
 
     return (
         <>
-            {/* ===== OVERLAY OSCURO (Fondo semi-transparente) ===== */}
+            {/* OVERLAY OSCURO*/}
             <AnimatePresence>
                 {isCartOpen && (
                     <motion.div 
@@ -127,12 +127,12 @@ const Cart: React.FC = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        onClick={toggleCart} // Cierra el carrito al hacer clic fuera
+                        onClick={toggleCart} // cierra el carrito al hacer clic fuera
                     />
                 )}
             </AnimatePresence>
             
-            {/* ===== SIDEBAR DEL CARRITO (Panel lateral derecho) ===== */}
+            {/* SIDEBAR DEL CARRITO*/}
             <AnimatePresence>
                 {isCartOpen && (
                     <motion.div 
@@ -142,10 +142,10 @@ const Cart: React.FC = () => {
                         animate="visible"
                         exit="exit"
                     >
-                        {/* Estructura flex para header fijo, contenido scrolleable y footer fijo */}
+                        {/* estructura flex para header fijo, contenido scrolleable y footer fijo */}
                         <div className="flex flex-col h-full">
                             
-                            {/* ===== HEADER DEL CARRITO ===== */}
+                            {/* HEADER DEL CARRITO*/}
                             <motion.header 
                                 className="flex items-center justify-between p-4 border-b border-gray-200 shrink-0"
                                 initial={{ opacity: 0, y: -20 }}
@@ -155,7 +155,7 @@ const Cart: React.FC = () => {
                                 <div className="flex items-baseline gap-3">
                                     <h3 className="font-serif-display text-2xl font-bold">Tu Carrito</h3>
                                     
-                                    {/* Botón "Vaciar" solo si hay items */}
+                                    {/* botón vaciar solo si hay items */}
                                     <AnimatePresence>
                                         {cartItems.length > 0 && (
                                             <motion.button 
@@ -173,7 +173,7 @@ const Cart: React.FC = () => {
                                     </AnimatePresence>
                                 </div>
                                 
-                                {/* Botón X para cerrar */}
+                                {/* botón X para cerrar */}
                                 <motion.button 
                                     onClick={toggleCart} 
                                     className="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -184,9 +184,9 @@ const Cart: React.FC = () => {
                                 </motion.button>
                             </motion.header>
                             
-                            {/* ===== CONTENIDO DEL CARRITO (scrolleable) ===== */}
+                            {/* CONTENIDO DEL CARRITO */}
                             <div className="flex-grow p-4 overflow-y-auto">
-                                {/* Si el carrito está vacío */}
+                                {/* si el carrito está vacío */}
                                 {cartItems.length === 0 ? (
                                     <motion.div 
                                         className="flex flex-col items-center justify-center h-full text-center text-text-secondary"
@@ -211,7 +211,7 @@ const Cart: React.FC = () => {
                                         <p className="text-sm">Añade algunos productos para empezar.</p>
                                     </motion.div>
                                 ) : (
-                                    // Si hay productos, muestra la lista
+                                    // si hay productos, muestra la lista
                                     <motion.div 
                                         className="space-y-4"
                                         initial="hidden"
@@ -229,7 +229,7 @@ const Cart: React.FC = () => {
                                                     exit="exit"
                                                     layout
                                                 >
-                                                    {/* Imagen del producto */}
+                                                    {/* imagen del producto */}
                                                     <motion.div 
                                                         className="w-20 h-20 rounded-xl bg-cover bg-center shrink-0" 
                                                         style={{ backgroundImage: `url('${item.image}')` }}
@@ -237,7 +237,7 @@ const Cart: React.FC = () => {
                                                         transition={{ duration: 0.2 }}
                                                     />
                                                     
-                                                    {/* Información del producto */}
+                                                    {/* información del producto */}
                                                     <div className="flex-grow">
                                                         <p className="font-bold">{item.name}</p>
                                                         <p className="text-sm text-text-secondary">{item.selectedPrice.size}</p>
@@ -252,9 +252,9 @@ const Cart: React.FC = () => {
                                                         </motion.p>
                                                     </div>
                                                     
-                                                    {/* Control de cantidad (+/-) */}
+                                                    {/* control de cantidad + | - */}
                                                     <div className="flex items-center gap-2">
-                                                        {/* Botón decrementar */}
+                                                        {/* botón decrementar */}
                                                         <motion.button 
                                                             onClick={() => updateQuantity(item.id, item.quantity - 1)} 
                                                             className="flex items-center justify-center h-7 w-7 rounded-full bg-gray-200 text-text-primary transition-colors hover:bg-gray-300"
@@ -264,7 +264,7 @@ const Cart: React.FC = () => {
                                                             -
                                                         </motion.button>
                                                         
-                                                        {/* Cantidad actual */}
+                                                        {/* cantidad actual */}
                                                         <motion.span 
                                                             className="font-bold text-md w-6 text-center"
                                                             key={`qty-${item.id}-${item.quantity}`}
@@ -275,7 +275,7 @@ const Cart: React.FC = () => {
                                                             {item.quantity}
                                                         </motion.span>
                                                         
-                                                        {/* Botón incrementar */}
+                                                        {/* botón incrementar */}
                                                         <motion.button 
                                                             onClick={() => updateQuantity(item.id, item.quantity + 1)} 
                                                             className="flex items-center justify-center h-7 w-7 rounded-full bg-gray-200 text-text-primary transition-colors hover:bg-gray-300"
@@ -286,7 +286,7 @@ const Cart: React.FC = () => {
                                                         </motion.button>
                                                     </div>
                                                     
-                                                    {/* Botón eliminar */}
+                                                    {/* botón eliminar */}
                                                     <motion.button 
                                                         onClick={() => removeFromCart(item.id)} 
                                                         aria-label={`Eliminar ${item.name}`} 
@@ -303,7 +303,7 @@ const Cart: React.FC = () => {
                                 )}
                             </div>
                             
-                            {/* ===== FOOTER DEL CARRITO (solo si hay items) ===== */}
+                            {/* FOOTER DEL CARRITO solo si hay items*/}
                             <AnimatePresence>
                                 {cartItems.length > 0 && (
                                     <motion.footer 
@@ -313,7 +313,7 @@ const Cart: React.FC = () => {
                                         exit={{ opacity: 0, y: 20 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        {/* Campo de notas opcionales */}
+                                        {/* campo de notas opcionales */}
                                         <div className="mb-4">
                                             <label htmlFor="order-notes" className="block text-sm font-medium text-text-primary mb-1">
                                                 Notas para tu pedido (opcional)
@@ -330,7 +330,7 @@ const Cart: React.FC = () => {
                                             />
                                         </div>
                                         
-                                        {/* Nota sobre el envío */}
+                                        {/* nota de tips */}
                                         <motion.p 
                                             className="text-xs text-center text-text-secondary mb-4"
                                             initial={{ opacity: 0 }}
@@ -340,7 +340,7 @@ const Cart: React.FC = () => {
                                             Nota: El precio de envío puede variar dependiendo de tu ubicación.
                                         </motion.p>
                                         
-                                        {/* Total del pedido */}
+                                        {/* total del pedido */}
                                         <motion.div 
                                             className="flex justify-between items-center mb-4"
                                             initial={{ opacity: 0 }}
@@ -359,7 +359,7 @@ const Cart: React.FC = () => {
                                             </motion.span>
                                         </motion.div>
                                         
-                                        {/* Botón principal: Finalizar por WhatsApp */}
+                                        {/* botón finalizar por WhatsApp */}
                                         <motion.button 
                                             onClick={handleFinalizeOrder} 
                                             className="bg-[#25D366] text-white flex w-full items-center justify-center gap-2 rounded-full py-3 px-5 text-base font-bold shadow-lg"
@@ -372,7 +372,7 @@ const Cart: React.FC = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: 0.4 }}
                                         >
-                                            {/* Logo de WhatsApp */}
+                                            {/* logo de WhatsApp */}
                                             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 2.001c-5.503 0-9.972 4.47-9.972 9.971 0 1.761.46 3.486 1.34 4.978l-1.39 5.093 5.215-1.373c1.472.82 3.12 1.258 4.807 1.258h.001c5.502 0 9.971-4.47 9.971-9.971s-4.469-9.97-9.971-9.97zm0 17.94c-1.574 0-3.11-.472-4.43-1.365l-.316-.187-3.268.861.87-3.197-.206-.328c-.985-1.564-1.503-3.411-1.503-5.328 0-4.596 3.737-8.332 8.332-8.332 4.594 0 8.33 3.736 8.33 8.332s-3.736 8.332-8.33 8.332zm3.32-5.463c-.183-.3-.642-.48-1.353-.807-.71-.326-4.2-2.053-4.858-2.288-.658-.234-1.135-.125-1.135.597 0 .346.402.597.55.777.149.179.317.402.485.617.168.215.337.234.622.062.285-.172.932-.341 1.777-1.09.845-.75 1.408-1.51 1.576-1.761.168-.25.168-.465.077-.617-.091-.151-.234-.366-.485-.617s-.418-.47-.622-.705c-.204-.234-.234-.191-.403-.465s-.34-.597-.465-.847c-.125-.25-.25-.213-.34-.213h-.452c-.172 0-.465.062-.71.303-.246.242-.932.912-.932 2.228 0 1.316.95 2.57 1.08 2.75.129.179 1.8 2.768 4.31 3.841 2.512 1.072 2.512.715 2.797.668.285-.047.933-.38 1.062-.75.129-.37.129-.687.091-.75s-.148-.094-.337-.187z"/></svg>
                                             <span>Finalizar por WhatsApp</span>
                                         </motion.button>
@@ -384,8 +384,8 @@ const Cart: React.FC = () => {
                 )}
             </AnimatePresence>
 
-            {/* ===== MODAL DE CONFIRMACIÓN ===== */}
-            {/* Solo se muestra si showConfirmationModal es true */}
+            {/* MODAL DE CONFIRMACIÓN*/}
+            {/* solo se muestra si showConfirmationModal es true */}
             <AnimatePresence>
                 {showConfirmationModal && (
                     <motion.div 
@@ -402,7 +402,7 @@ const Cart: React.FC = () => {
                             animate="visible"
                             exit="exit"
                         >
-                            {/* Ícono */}
+                            {/* icono */}
                             <motion.span 
                                 className="material-symbols-outlined text-5xl text-secondary mb-3 block"
                                 animate={{ 
@@ -417,7 +417,7 @@ const Cart: React.FC = () => {
                                 forward_to_inbox
                             </motion.span>
                             
-                            {/* Título */}
+                            {/* título */}
                             <motion.h3 
                                 className="text-xl font-bold font-serif-display text-text-primary"
                                 initial={{ opacity: 0, y: 10 }}
@@ -427,7 +427,7 @@ const Cart: React.FC = () => {
                                 Estás a un paso de WhatsApp
                             </motion.h3>
                             
-                            {/* Mensaje explicativo */}
+                            {/* mensaje explicativo */}
                             <motion.p 
                                 className="mt-2 text-sm text-text-secondary"
                                 initial={{ opacity: 0 }}
@@ -437,18 +437,18 @@ const Cart: React.FC = () => {
                                 ¡Gracias! Hemos preparado tu mensaje. Una vez que lo envíes en WhatsApp, nuestro equipo te responderá en un plazo aproximado de 15 minutos para confirmar tu pedido y coordinar el pago y la entrega. Tu pedido no está confirmado hasta que recibas nuestra respuesta.
                             </motion.p>
                             
-                            {/* Botones de acción */}
+                            {/* botones de acción */}
                             <motion.div 
                                 className="mt-6 flex flex-col sm:flex-row-reverse gap-3"
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
                             >
-                                {/* Botón confirmar (abre WhatsApp) */}
+                                {/* botón confirmar | manda a whatsapp */}
                                 <motion.button 
                                     onClick={() => {
-                                        generateWhatsAppMessage(); // Genera y abre WhatsApp
-                                        setShowConfirmationModal(false); // Cierra el modal
+                                        generateWhatsAppMessage(); // genera y abre WhatsApp
+                                        setShowConfirmationModal(false); // cierra el modal
                                     }}
                                     className="w-full rounded-full py-3 px-4 text-sm font-bold bg-secondary text-white"
                                     whileHover={{ 
@@ -479,40 +479,3 @@ const Cart: React.FC = () => {
 };
 
 export default Cart;
-
-/* ===== MEJORAS IMPLEMENTADAS CON FRAMER MOTION =====
-
-✅ OVERLAY:
-- Fade in/out suave
-- Click fuera para cerrar
-
-✅ SIDEBAR:
-- Slide desde la derecha con spring
-- Header con fade + slide down
-- Botón "Vaciar" con AnimatePresence
-
-✅ ITEMS DEL CARRITO:
-- Stagger animation (aparecen uno por uno)
-- Layout animation al eliminar
-- Hover en imagen (zoom)
-- Botones +/- con hover/tap
-- Cantidad con spring animation
-- Precio con bounce al cambiar
-- Botón eliminar con rotate
-
-✅ CARRITO VACÍO:
-- Ícono con wiggle animation
-- Fade + scale
-
-✅ FOOTER:
-- Fade + slide up
-- Total con bounce
-- Botón WhatsApp con hover effect
-
-✅ MODAL:
-- Backdrop con fade
-- Modal con spring + scale
-- Ícono con wiggle
-- Botones con hover/tap
-
-*/

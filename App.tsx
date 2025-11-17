@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
 import { DataProvider } from './context/DataContext';
 
-// Importación de componentes
+// importación de componentes
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
@@ -17,31 +17,29 @@ import AdminRouter from './components/admin/AdminRouter';
 import LoginPage from './components/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// Declaración de tipo para TypeScript
-
-// ===== COMPONENTE: SCROLL TO TOP =====
-// Hace scroll al inicio de la página cada vez que cambias de ruta
+// COMPONENTE SCROLL TO TOP
+// hace scroll al inicio de la página
 const ScrollToTop = () => {
-  const { pathname } = useLocation(); // Obtiene la ruta actual
+  const { pathname } = useLocation(); // obtiene la ruta actual | para url y los bread
 
   useEffect(() => {
-    // Cada vez que cambia la ruta, mueve el scroll al inicio
+    // cada vez que cambia la ruta mueve el scroll al inicio
     window.scrollTo(0, 0);
-  }, [pathname]); // Se ejecuta cuando pathname cambia
+  }, [pathname]); 
 
-  return null; // No renderiza nada, solo efecto secundario
+  return null;
 };
 
-// ===== COMPONENTE: NOTIFICACIÓN FLOTANTE =====
-// Muestra mensajes temporales cuando agregas productos al carrito
+// COMPONENTE DE NOTIFICACIÓN FLOTANTE
+// muestra mensajes al agregar productos al carrito | este estaba antes de las animaciones motion
 const Notification: React.FC = () => {
-    const { notificationMessage } = useCart(); // Obtiene el mensaje del Context
+    const { notificationMessage } = useCart(); // obtiene el mensaje del Context
     
     return (
         <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-[cubic-bezier(0.18,0.89,0.32,1.28)] ${
             notificationMessage 
-                ? 'opacity-100 translate-y-0 scale-100' // Visible y animado
-                : 'opacity-0 translate-y-4 scale-90 pointer-events-none' // Oculto
+                ? 'opacity-100 translate-y-0 scale-100' // visible y animado
+                : 'opacity-0 translate-y-4 scale-90 pointer-events-none' // ocultar
         }`}>
             <div className="flex items-center gap-3 rounded-full bg-text-primary px-5 py-3 text-white shadow-lg">
                 <span className="material-symbols-outlined">check_circle</span>
@@ -51,64 +49,60 @@ const Notification: React.FC = () => {
     );
 };
 
-// ===== COMPONENTE PRINCIPAL: APP =====
+// PRINCIPAL
 const App: React.FC = () => {
-  // Inicializa AOS (animaciones on scroll) al montar el componente
+  // inicializa AOS | librería que usaba antes
   return (
-    // ===== PROVIDERS: ENVUELVEN TODA LA APP =====
-    // CartProvider: Provee el estado del carrito a toda la app
+    // CartProvider da el estado del carrito a todo, así siempre está funcionando
     <CartProvider>
-      {/* DataProvider: Provee categorías y productos desde la API */}
+      {/* DataProvider da las categorías y productos de la api */}
       <DataProvider>
-        {/* Componente que hace scroll al inicio en cada cambio de ruta */}
+        {/*este hace scroll al inicio, para que se vea bonito */}
         <ScrollToTop />
-        
-        {/* Estructura principal de la app */}
+        {/* estructura principal de la app */}
         <div className="relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden">
-          
-          {/* Header fijo en la parte superior */}
+          {/* Header este no se mueve*/}
           <Header />
           
-          {/* Contenido principal (flex-grow para ocupar todo el espacio disponible) */}
+          {/* contenido principal */}
           <main className="flex-grow relative isolate">
-            {/* ===== DEFINICIÓN DE RUTAS ===== */}
             <Routes>
-              {/* Ruta principal (home) */}
+              {/* ruta de inicio */}
               <Route path="/" element={<HomePage />} />
               
-              {/* Páginas estáticas */}
+              {/* ruta de nsotroos y contacto */}
               <Route path="/nosotros" element={<AboutPage />} />
               <Route path="/contacto" element={<ContactPage />} />
               
-              {/* Rutas dinámicas con parámetros */}
-              <Route path="/category/:slug" element={<CategoryPage />} /> {/* :slug es un parámetro variable */}
-              <Route path="/product/:id" element={<ProductDetailPage />} /> {/* :id es el slug del producto */}
+              {/* rutas dinámicas*/}
+              <Route path="/category/:slug" element={<CategoryPage />} /> {/* este es el slug de la categoria */}
+              <Route path="/product/:id" element={<ProductDetailPage />} /> {/* este es el slug pero ahi dice id y no lo cambie*/}
               
-              {/* Editor de pasteles personalizados */}
+              {/* editor de pasteles */}
               <Route path="/personalizar" element={<CustomCakePage />} />
               
-              {/* Login para admin */}
+              {/* login admin*/}
               <Route path="/login" element={<LoginPage />} />
               
-              {/* Rutas del panel admin (protegidas con autenticación) */}
+              {/* ruta admin con autentificacion */}
               <Route 
-                path="/admin/*" // /* = cualquier sub-ruta dentro de /admin
+                path="/admin/*"
                 element={
-                  <ProtectedRoute> {/* Componente que valida autenticación */}
-                    <AdminRouter /> {/* Router interno del admin */}
+                  <ProtectedRoute> {/* valida autenticación */}
+                    <AdminRouter /> {/* rutas internas, porque no pueden ir publicas */}
                   </ProtectedRoute>
                 } 
               />
             </Routes>
           </main>
           
-          {/* Footer en la parte inferior */}
+          {/* Footer */}
           <Footer />
           
-          {/* Sidebar del carrito (se muestra/oculta con toggleCart) */}
+          {/*carrito*/}
           <Cart />
           
-          {/* Notificación flotante */}
+          {/* notificación*/}
           <Notification />
         </div>
       </DataProvider>
@@ -117,31 +111,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-/* ===== ARQUITECTURA DE LA APP =====
-
-JERARQUÍA DE COMPONENTES:
-App
-├── CartProvider (estado global del carrito)
-│   └── DataProvider (estado global de categorías/productos)
-│       ├── ScrollToTop (utilidad)
-│       ├── Header (navegación superior)
-│       ├── main (contenido principal)
-│       │   └── Routes (sistema de rutas)
-│       │       ├── HomePage
-│       │       ├── CategoryPage
-│       │       ├── ProductDetailPage
-│       │       ├── CustomCakePage (editor de pasteles)
-│       │       └── AdminRouter (panel admin protegido)
-│       ├── Footer (pie de página)
-│       ├── Cart (sidebar del carrito)
-│       └── Notification (toast de notificaciones)
-
-FLUJO DE DATOS:
-1. DataProvider carga categorías y productos desde la API de C#
-2. Los componentes consumen estos datos usando useData()
-3. CartProvider maneja el estado del carrito
-4. Los componentes agregan/eliminan productos usando useCart()
-5. Las rutas dinámicas usan parámetros (slug, id) para mostrar contenido específico
-
-*/

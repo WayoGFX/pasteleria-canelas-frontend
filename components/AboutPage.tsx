@@ -14,7 +14,7 @@ import {
   scaleUp
 } from '../utils/animations';
 
-// ===== VARIANTES ADICIONALES PARA ABOUT PAGE =====
+// VARIANTES ADICIONALES
 const pillarCardVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: (index: number) => ({
@@ -47,7 +47,7 @@ const AboutPage: React.FC = () => {
         { label: 'Nosotros' }
     ];
 
-    // Datos de los pilares
+    // datos de los pilares
     const pillars = [
         {
             icon: "workspace_premium",
@@ -66,7 +66,7 @@ const AboutPage: React.FC = () => {
         }
     ];
 
-    // Datos de la galería
+    // datos de la galería
     const galleryImages = [
         { src: "https://picsum.photos/seed/baking-process/500/500", alt: "Manos amasando" },
         { src: "https://picsum.photos/seed/flour-hands/500/500", alt: "Ingredientes frescos" },
@@ -132,7 +132,7 @@ const AboutPage: React.FC = () => {
                             </motion.div>
                         </motion.div>
                         
-                        {/* Historia de la fundadora */}
+                        {/* historia del dueño */}
                         <motion.div
                             variants={fadeInLeft}
                             initial="hidden"
@@ -180,7 +180,7 @@ const AboutPage: React.FC = () => {
                         </motion.div>
                     </div>
 
-                    {/* ===== PILARES SECTION ===== */}
+                    {/*seccion de pilares*/}
                     <div>
                         <motion.h3 
                             className="font-serif-display text-3xl font-bold mb-8 text-center"
@@ -229,7 +229,7 @@ const AboutPage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* ===== GALERÍA SECTION ===== */}
+                    {/* galeria de fotos*/}
                     <div>
                         <motion.h3 
                             className="font-serif-display text-3xl font-bold mb-8 text-center"
@@ -237,7 +237,7 @@ const AboutPage: React.FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={viewportConfig}
                         >
-                            Un Vistazo a Nuestro Taller
+                            Un Vistazo a Nuestro Como Trabajamos
                         </motion.h3>
                         
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -269,7 +269,7 @@ const AboutPage: React.FC = () => {
                         </div>
                     </div>
                     
-                    {/* ===== CTA FINAL ===== */}
+                    {/* Llamado a la accion*/}
                     <motion.div 
                         className="mt-16 md:mt-20 text-center"
                         initial={{ opacity: 0, y: 30 }}
@@ -319,44 +319,3 @@ const AboutPage: React.FC = () => {
 };
 
 export default AboutPage;
-
-/* ===== MEJORAS IMPLEMENTADAS CON FRAMER MOTION =====
-
-✅ ELIMINADO:
-- Todos los data-aos
-- animate-fadeIn de Tailwind
-- Dependencias de AOS
-
-✅ HERO SECTION:
-- Título con fade + slide up
-- Descripción con delay
-
-✅ FOUNDER STORY:
-- Imagen con hover scale + sombra
-- Texto con slide desde la izquierda
-- Párrafos con delays escalonados
-- Firma con slide desde la derecha
-
-✅ PILARES:
-- Cards con stagger (aparecen uno por uno)
-- Hover: Se elevan 8px
-- Ícono rota 5° en hover
-- Transiciones suaves
-
-✅ GALERÍA:
-- Imágenes con spring animation
-- Stagger con delays incrementales
-- Hover: Card escala 1.05
-- Imagen interna escala 1.1
-
-✅ CTA FINAL:
-- Fade + slide up
-- Botón con spring
-- Hover: Se eleva 3px
-
-✅ PERFORMANCE:
-- GPU-accelerated animations
-- Viewport observers optimizados
-- Transiciones suaves
-
-*/

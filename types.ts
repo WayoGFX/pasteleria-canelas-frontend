@@ -1,11 +1,10 @@
-// TIPOS PARA EL CATÁLOGO PÚBLICO (lo que ven los clientes)
-
+// TIPOS PARA EL CATÁLOGO PÚBLICO
 export type CategorySlug = string;
 
-// interface de Precio Producto
+// interface de precio producto
 export interface ProductPrice {
-  size: string; // Descripción del tamaño
-  price: number; // Definir precio
+  size: string; // descripción del tamaño
+  price: number; // definir precio
 }
 
 // interface de Productos
@@ -14,8 +13,8 @@ export interface Product {
   name: string;
   description: string;
   image: string;
-  category: CategorySlug; // Slug de la categoría a la que pertenece
-  prices: ProductPrice[]; // Array de precios (puede tener 1 o más o ninguno)
+  category: CategorySlug; // slug de la categoría a la que pertenece
+  prices: ProductPrice[]; // array de precios puede tener 1 o más o ninguno
   featured?: boolean; // para destacar productos
   seasonal?: boolean; //es producto de temporada
 }
@@ -29,26 +28,25 @@ export interface Category {
     icon: string; 
 }
 
-// ✨ NUEVO: Tipo para el catálogo inicial optimizado
-// Este tipo representa la respuesta del endpoint /api/Catalogo/inicial
-// Contiene todo lo necesario para cargar el catálogo en una sola petición
+// tipo para el catálogo inicial optimizado
+// /api/Catalogo/inicial
+// contiene todo lo necesario para cargar el catálogo en una sola petición | asi bien eficiente
 export interface CatalogoInicial {
-  categories: Category[];   // Todas las categorías activas
-  products: Product[];       // Todos los productos activos
-  seasonal: Product[];       // Productos de temporada (subconjunto de products)
+  categories: Category[]; // todas las categorías activas
+  products: Product[]; // todos los productos activos
+  seasonal: Product[]; // productos de temporada
 }
 
 // TIPOS PARA EL CARRITO DE COMPRAS
- 
-//Representa un item en el carrito de compras
+//representa un item en el carrito de compras
 // el id no es el id del producto si no que es una combinación de productoid + precio y tamaño seleccionado
-// algo como: pastel-chocolate-1-porcion
+// algo como pastel-chocolate-1-porcion
 // esto es porque el mismo producto se puede seleccionar con diferente tamaño
 
 // interface de carrito
 export interface CartItem {
   id: string; // combinación de id + tamaño + precio
-  name: string; // Nombre del producto
+  name: string; // nombre del producto
   image: string;
   quantity: number; // cantidad del item
   selectedPrice: ProductPrice; // precio seleccionado
@@ -56,39 +54,34 @@ export interface CartItem {
 
 
 // TIPOS PARA PASTELES PERSONALIZADOS
-// Estos tipos se usan en la página de Personalizar Pasteles
+// estos tipos se usan en la página de Personalizar Pasteles
 
-// Este es para la opción de cada seccción
+// este es para la opción de cada seccción
 export interface CustomCakeOption {
-    id: string;      // ID único de la opción como  'chocolate', 'vainilla', 'fresa'
-    name: string;    // Nombre visible: "Chocolate", "Vainilla", "Fresa"
-    image: string;   // Imagen representativa de la opción
+    id: string; // ID único de la opción como  chocolate, vainilla, fresa
+    name: string; // nombre Chocolate, Vainilla,Fresa
+    image: string; // imagende la opción
 }
 
 
 
 // este representa la sección 
 export interface CustomCakeSection {
-    // El ID puede ser solo uno de estos valores específicos ya definidos
-    // Esto asegura que no haya secciones inventadas o algo raro
+    // ID puede ser solo uno de valores específicos ya definidos
+    // esto asegura que no haya secciones inventadas o algo raro
     id: 'size' | 'flavor' | 'filling' | 'frosting' | 'decoration' | 'shape' | 'syrup';
-    name: string;                   // Nombre de la sección
-    options: CustomCakeOption[];    // Array con todas las opciones disponibles
+    name: string; // nombre de la sección
+    options: CustomCakeOption[]; // array con todas las opciones disponibles
 }
 
-
-// este es para seleccionar una llave y el texto, esto para lo que selecciona el usuario
-// 'frosting': 'buttercream',
-// 'decoration': 'flores',
+// selecciona una llave y el texto
+// decoration: flores,
 
 export type CustomCakeSelection = {
     [key: string]: string | null;
 };
 
-
-// SECCIÓN 4: TIPOS PARA TESTIMONIOS
-
-// este es para los testimonios que se tienen
+// TIPOS PARA TESTIMONIOS
 export interface Testimonial {
     quote: string;
     author: string;
@@ -97,8 +90,7 @@ export interface Testimonial {
 
 
 
-// SECCIÓN 5: TIPOS PARA EL PANEL DE ADMINISTRACIÓN
-// Estos tipos son solo para el panel de administración
+// TIPOS PARA EL PANEL DE ADMINISTRACIÓN
 
 // categoria admin
 export interface AdminCategory {
@@ -111,30 +103,12 @@ export interface AdminCategory {
     activo: boolean;
 }
 
-// producto precio . este tiene el id
+// producto precio
 export interface AdminProductPrice {
     productoPrecioId: number;// ID 
     descripcionPrecio: string;
     precio: number;
 }
-
-/**
- * Representa un producto resumido para las listas del admin
- * Se usa en ProductListPage (la tabla de productos)
- * 
- * ¿Por qué "Summary" (resumido)?
- * - Tiene los campos necesarios para mostrar en una lista/tabla
- * - No tiene todos los detalles (eso es AdminProductDetail)
- * - Más ligero para cargar listas largas
- * 
- * Campos clave:
- * - productoId: ID numérico (para editar/eliminar)
- * - slug: Para URLs públicas
- * - activo: Para mostrar/ocultar del catálogo
- * - esDeTemporada: Marca si es producto de temporada
- * - categoriaId: Para filtrar por categoría
- * - productoPrecios: Lista de precios (para mostrar cuántos tiene)
- */
 
 // este sumary es un dto resumido para mostrar en la lista, más ligero y tiene solo lo necesario para el admin
 export interface AdminProductSummary {

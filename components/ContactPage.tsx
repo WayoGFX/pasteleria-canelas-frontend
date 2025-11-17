@@ -11,7 +11,7 @@ import {
   viewportConfig
 } from '../utils/animations';
 
-// ===== VARIANTES ADICIONALES PARA CONTACT PAGE =====
+// otras animaciones
 const infoItemVariants = {
   hidden: { opacity: 0, x: -20 },
   visible: (index: number) => ({
@@ -74,13 +74,13 @@ const ContactPage: React.FC = () => {
         }
     ];
 
-    // Horarios
+    // horarios
     const schedule = [
         { day: "Lunes a Sábado:", hours: "9am - 8pm" },
         { day: "Domingo:", hours: "Cerrado" }
     ];
 
-    // Redes sociales
+    // redes sociales
     const socialMedia = [
         {
             name: "Instagram",
@@ -104,7 +104,7 @@ const ContactPage: React.FC = () => {
             <div className="container mx-auto px-4 py-6 md:py-12">
                 <Breadcrumbs crumbs={crumbs} />
                 
-                {/* ===== HERO SECTION ===== */}
+                {/* HERO*/}
                 <motion.div 
                     className="text-center max-w-3xl mx-auto"
                     initial={{ opacity: 0, y: 30 }}
@@ -125,14 +125,14 @@ const ContactPage: React.FC = () => {
                 </motion.div>
 
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-16">
-                    {/* ===== COLUMNA IZQUIERDA: INFORMACIÓN ===== */}
+                    {/* COLUMNA INFORMACIÓN */}
                     <motion.div 
                         className="md:col-span-2 space-y-8"
                         variants={fadeInRight}
                         initial="hidden"
                         animate="visible"
                     >
-                        {/* Mapa y dirección */}
+                        {/* mapa y dirección */}
                         <div>
                             <motion.h3 
                                 className="font-serif-display text-2xl font-bold mb-4"
@@ -194,7 +194,7 @@ const ContactPage: React.FC = () => {
                             </div>
                         </div>
                         
-                        {/* Horarios */}
+                        {/* horarios */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -221,7 +221,7 @@ const ContactPage: React.FC = () => {
                             </ul>
                         </motion.div>
                         
-                        {/* Redes sociales */}
+                        {/* redes sociales */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -254,7 +254,7 @@ const ContactPage: React.FC = () => {
                         </motion.div>
                     </motion.div>
 
-                    {/* ===== COLUMNA DERECHA: PEDIDOS ESPECIALES ===== */}
+                    {/* PEDIDOS ESPECIALES*/}
                     <motion.div 
                         className="md:col-span-3"
                         variants={fadeInLeft}
@@ -335,41 +335,3 @@ const ContactPage: React.FC = () => {
 };
 
 export default ContactPage;
-
-/* ===== MEJORAS IMPLEMENTADAS CON FRAMER MOTION =====
-
-✅ ELIMINADO:
-- Todos los data-aos
-- animate-fadeIn de Tailwind
-
-✅ HERO SECTION:
-- Título con fade + slide up
-- Descripción con delay
-
-✅ COLUMNA IZQUIERDA (Información):
-- Slide desde la derecha
-- Mapa con scale al aparecer + hover
-- Info items con stagger
-- Íconos rotan en hover
-- Horarios con delays
-- Redes sociales con spring + rotate
-
-✅ COLUMNA DERECHA (Pedidos):
-- Slide desde la izquierda
-- Card con hover shadow
-- Imagen con scale + hover zoom doble
-- Párrafos con delays
-- Botón WhatsApp con elevación
-
-✅ MICRO-INTERACTIONS:
-- Íconos escalan y rotan en hover
-- Links se mueven ligeramente
-- Imágenes con zoom doble (contenedor + imagen)
-- Botones con feedback táctil
-
-✅ PERFORMANCE:
-- GPU-accelerated animations
-- Transiciones optimizadas
-- Delays coordinados
-
-*/

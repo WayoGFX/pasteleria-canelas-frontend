@@ -1,11 +1,10 @@
-// ===== UTILIDADES DE ANIMACIÓN CON FRAMER MOTION =====
-// Variantes reutilizables para todo el proyecto
-
+// UTILIDADES DE ANIMACIÓN CON FRAMER MOTION 
+// Variantes reutilizables 
 import { Variants } from 'framer-motion';
 
-// ===== ANIMACIONES DE ENTRADA =====
+// ANIMACIONES DE ENTRADA
 
-// Fade in desde abajo (para cards, secciones)
+// Fade in desde abajo
 export const fadeInUp: Variants = {
   hidden: { 
     opacity: 0, 
@@ -16,7 +15,7 @@ export const fadeInUp: Variants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1] // ease-out-cubic
+      ease: [0.25, 0.1, 0.25, 1]
     }
   }
 };
@@ -53,7 +52,7 @@ export const fadeInRight: Variants = {
   }
 };
 
-// Fade in simple (para overlays, modales)
+// Fade in simple 
 export const fadeIn: Variants = {
   hidden: { 
     opacity: 0 
@@ -66,7 +65,7 @@ export const fadeIn: Variants = {
   }
 };
 
-// Scale up (para elementos importantes, CTAs)
+// Scale up 
 export const scaleUp: Variants = {
   hidden: { 
     opacity: 0, 
@@ -82,7 +81,7 @@ export const scaleUp: Variants = {
   }
 };
 
-// ===== ANIMACIONES PARA LISTAS (STAGGER) =====
+// ANIMACIONES PARA LISTAS STAGGER
 
 // Container que anima sus hijos en secuencia
 export const staggerContainer: Variants = {
@@ -90,14 +89,14 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1, // 100ms entre cada hijo
-      delayChildren: 0.2, // Delay antes del primer hijo
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
       ease: [0.25, 0.1, 0.25, 1]
     }
   }
 };
 
-// Item individual (usar con staggerContainer)
+// item individual 
 export const staggerItem: Variants = {
   hidden: { 
     opacity: 0, 
@@ -112,7 +111,7 @@ export const staggerItem: Variants = {
   }
 };
 
-// Stagger más rápido (para grids)
+// Stagger más rápido para grids
 export const staggerFast: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -124,9 +123,9 @@ export const staggerFast: Variants = {
   }
 };
 
-// ===== ANIMACIONES DE INTERACCIÓN =====
+// ANIMACIONES DE INTERACCIÓN
 
-// Hover: Elevación suave
+// Hover elevación suave
 export const hoverLift = {
   y: -8,
   transition: {
@@ -135,7 +134,7 @@ export const hoverLift = {
   }
 };
 
-// Hover: Scale sutil
+// Hover scale
 export const hoverScale = {
   scale: 1.03,
   transition: {
@@ -144,14 +143,14 @@ export const hoverScale = {
   }
 };
 
-// Tap: Feedback al hacer clic
+// Tap Feedback al hacer clic
 export const tapScale = {
   scale: 0.97
 };
 
-// ===== ANIMACIONES PARA CARRUSELES =====
+// ANIMACIONES PARA CARRUSELES
 
-// Slide in desde la derecha (para items del carrusel)
+// slide in desde la derecha para items del carrusel
 export const slideInRight: Variants = {
   hidden: { 
     opacity: 0, 
@@ -166,9 +165,9 @@ export const slideInRight: Variants = {
   }
 };
 
-// ===== ANIMACIONES PARA HERO =====
+// ANIMACIONES PARA HERO
 
-// Hero title con efecto dramático
+// hero title con efecto
 export const heroTitle: Variants = {
   hidden: { 
     opacity: 0, 
@@ -203,7 +202,7 @@ export const heroSubtitle: Variants = {
   }
 };
 
-// Hero CTA button
+// Hero cta
 export const heroCTA: Variants = {
   hidden: { 
     opacity: 0, 
@@ -215,27 +214,25 @@ export const heroCTA: Variants = {
     transition: {
       duration: 0.5,
       delay: 0.6,
-      ease: [0.34, 1.56, 0.64, 1] // spring effect
+      ease: [0.34, 1.56, 0.64, 1]
     }
   }
 };
 
-// ===== CONFIGURACIÓN DE VIEWPORT =====
-// Reutilizable para whileInView
-
+//  CONFIGURACIÓN DE VIEWPORT 
 export const viewportConfig = {
-  once: true, // Solo anima una vez
-  margin: "-100px", // Empieza la animación 100px antes
-  amount: 0.3 // Activa cuando 30% del elemento es visible
+  once: true,
+  margin: "-100px", 
+  amount: 0.3 
 };
 
 export const viewportConfigEarly = {
   once: true,
-  margin: "-50px", // Empieza antes
+  margin: "-50px",
   amount: 0.2
 };
 
-// ===== TRANSICIONES PERSONALIZADAS =====
+// TRANSICIONES PERSONALIZADAS
 
 export const springTransition = {
   type: "spring",

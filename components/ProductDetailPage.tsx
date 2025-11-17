@@ -1,15 +1,14 @@
-// ⚡ OPTIMIZADO: Busca productos en memoria, sin peticiones HTTP adicionales
+// Busca productos en memoria
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { WHATSAPP_NUMBER, BUSINESS_NAME } from '../constants';
 import { useCart } from '../context/CartContext';
 import { Product, ProductPrice, Category } from '../types';
-import { useData } from '../context/DataContext'; // ⚡ NUEVO
-// ⚠️ YA NO SE IMPORTAN fetchProductBySlug ni fetchProductsByCategory
+import { useData } from '../context/DataContext';
 import Breadcrumbs from './Breadcrumbs';
 
-// Importar variantes de animación
+//  variantes de animación
 import {
   fadeInUp,
   fadeInLeft,
@@ -20,7 +19,7 @@ import {
   scaleUp
 } from '../utils/animations';
 
-// ===== COMPONENTE: FEATURE ICON ANIMADO =====
+// COMPONENTE
 const FeatureIcon: React.FC<{ icon: string; text: string; delay?: number }> = ({ icon, text, delay = 0 }) => (
     <motion.div 
       className="flex items-center gap-3 bg-primary/80 p-3 rounded-lg border border-gray-200/50"
@@ -37,26 +36,26 @@ const FeatureIcon: React.FC<{ icon: string; text: string; delay?: number }> = ({
 );
 
 const ProductDetailPage: React.FC = () => {
-  // ===== ESTADOS =====
+  // ESTADOS | el id es el slug
   const { id: slug } = useParams<{ id: string }>();
   const { addToCart } = useCart();
 
-  // ⚡ NUEVO: Obtener datos desde el contexto (ya cargados al inicio)
+  // obtener datos desde el contexto 
   const { categories, allProducts, loading: loadingCatalog } = useData();
 
-  // ⚡ NUEVO: Buscar producto en memoria (instantáneo, O(n))
+  // buscar producto en memoria
   const product = useMemo(
     () => allProducts.find(p => p.id === slug) || null,
     [allProducts, slug]
   );
 
-  // ⚡ NUEVO: Buscar categoría en memoria (instantáneo, O(n))
+  // buscar categoría en memoria 
   const category = useMemo(
     () => product ? categories.find(c => c.slug === product.category) || null : null,
     [categories, product]
   );
 
-  // ⚡ NUEVO: Productos relacionados filtrados en memoria (instantáneo, O(n))
+  // productos relacionados filtrados en memoria
   const relatedProducts = useMemo(
     () => {
       if (!product || !category) return [];
@@ -67,7 +66,7 @@ const ProductDetailPage: React.FC = () => {
     [allProducts, product, category, slug]
   );
 
-  // Estados locales del componente
+  // estados locales del componente
   const [selectedPrice, setSelectedPrice] = useState<ProductPrice | undefined>(undefined);
   const [quantity, setQuantity] = useState(1);
   const [isZooming, setIsZooming] = useState(false);
@@ -75,7 +74,7 @@ const ProductDetailPage: React.FC = () => {
   const [isAdded, setIsAdded] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
 
-  // ⚡ NUEVO: Seleccionar primer precio cuando el producto carga
+  // Seleccionar primer precio cuando el producto carga
   useEffect(() => {
     if (product && product.prices && product.prices.length > 0) {
       setSelectedPrice(product.prices[0]);
@@ -84,12 +83,7 @@ const ProductDetailPage: React.FC = () => {
     }
   }, [product]);
 
-  // ⚠️ ELIMINAR COMPLETAMENTE el useEffect anterior que hacía:
-  // - fetchProductBySlug
-  // - fetchProductsByCategory
-  // Ya no se necesita, todo está en memoria
-
-  // ===== FUNCIONES =====
+  // FUNCIONES
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.pageX - left) / width) * 100;
@@ -104,8 +98,7 @@ const ProductDetailPage: React.FC = () => {
     });
   };
 
-  // ===== SKELETON LOADING =====
-  // ⚡ ACTUALIZADO: Usa loadingCatalog en lugar de loading local
+  // SKELETON LOADING
   if (loadingCatalog) {
     return (
       <motion.div 
@@ -113,7 +106,7 @@ const ProductDetailPage: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        {/* Skeleton breadcrumb */}
+        {/* Skeleton */}
         <motion.div 
           className="h-6 bg-gray-200 rounded w-1/4 mb-6 ml-4"
           animate={{ opacity: [0.5, 1, 0.5] }}
@@ -143,7 +136,7 @@ const ProductDetailPage: React.FC = () => {
     );
   }
 
-  // ===== ERROR 404 =====
+  // ERROR 404
   if (!product || !category) {
     return (
       <motion.div 
@@ -165,7 +158,7 @@ const ProductDetailPage: React.FC = () => {
     );
   }
   
-  // ===== DATOS =====
+  // DATOS
   const crumbs = [
     { label: 'Inicio', link: '/' },
     ...(category.slug ? [{ label: category.name, link: `/category/${category.slug}` }] : []),
@@ -190,7 +183,7 @@ const ProductDetailPage: React.FC = () => {
   
   const shareText = `¡Mira este increíble ${product.name} de ${BUSINESS_NAME}!`;
 
-  // ===== RENDER PRINCIPAL =====
+  // PRINCIPAL DISEÑO
   return (
     <motion.div 
       className="container mx-auto pt-6"
@@ -200,10 +193,10 @@ const ProductDetailPage: React.FC = () => {
     >
         <Breadcrumbs crumbs={crumbs} />
         
-        {/* Grid de 2 columnas */}
+        {/* Grid 2 columnas */}
         <div className="sm:grid sm:grid-cols-2 sm:gap-10 sm:py-6 sm:max-w-5xl sm:mx-auto sm:items-start">
             
-            {/* ===== COLUMNA IZQUIERDA: IMAGEN CON ZOOM ===== */}
+            {/* COLUMNA IMAGEN CON ZOOM */}
             <motion.div 
                 className="relative sm:col-span-1 flex items-center justify-center"
                 variants={fadeInRight}
@@ -234,7 +227,7 @@ const ProductDetailPage: React.FC = () => {
                       }}
                     />
                     
-                    {/* Indicador de zoom */}
+                    {/* indicador de zoom */}
                     <AnimatePresence>
                       {!isZooming && (
                         <motion.div
@@ -251,10 +244,10 @@ const ProductDetailPage: React.FC = () => {
                 </motion.div>
             </motion.div>
             
-            {/* ===== COLUMNA DERECHA: DETALLES ===== */}
+            {/* COLUMNA DETALLES */}
             <div className="space-y-6 p-4 sm:p-0">
                 
-                {/* Encabezado */}
+                {/* encabezado */}
                 <motion.div
                   variants={fadeInLeft}
                   initial="hidden"
@@ -302,7 +295,7 @@ const ProductDetailPage: React.FC = () => {
                     </motion.p>
                 </motion.div>
                 
-                {/* Features grid */}
+                {/* detalles dependiendo su categoría */}
                 <motion.div 
                   className="grid grid-cols-2 gap-3"
                   initial={{ opacity: 0 }}
@@ -315,7 +308,7 @@ const ProductDetailPage: React.FC = () => {
                     {product.category === 'panaderia' && <FeatureIcon icon="breakfast_dining" text="Perfecto para el Desayuno" delay={0.7} />}
                 </motion.div>
 
-                {/* Selector de tamaño y precio */}
+                {/* selector de tamaño y precio */}
                 {hasPrices && !isCustomCake && (
                     <>
                         {product.prices.length > 1 && (
@@ -355,7 +348,7 @@ const ProductDetailPage: React.FC = () => {
                             </motion.div>
                         )}
                         
-                        {/* Precio y cantidad */}
+                        {/* precio y cantidad */}
                         <motion.div 
                           className="flex items-center justify-between"
                           initial={{ opacity: 0 }}
@@ -372,7 +365,7 @@ const ProductDetailPage: React.FC = () => {
                               ${selectedPrice?.price.toFixed(2)}
                             </motion.p>
                             
-                            {/* Control de cantidad */}
+                            {/* control de cantidad */}
                             <div className="flex items-center gap-2 rounded-full p-1 bg-gray-100">
                                 <motion.button 
                                     onClick={() => setQuantity(q => Math.max(1, q-1))} 
@@ -408,7 +401,7 @@ const ProductDetailPage: React.FC = () => {
                     </>
                 )}
                 
-                {/* Botones de acción */}
+                {/* botones de acción */}
                 <motion.div 
                   className="mt-6"
                   initial={{ opacity: 0, y: 20 }}
@@ -449,7 +442,7 @@ const ProductDetailPage: React.FC = () => {
                         whileTap={{ scale: 0.98 }}
                         transition={{ duration: 0.2 }}
                     >
-                        {/* Animación del ícono con AnimatePresence */}
+                        {/* animación del ícono*/}
                         <AnimatePresence mode="wait">
                           <motion.span 
                             key={isAdded ? 'check_circle' : 'add_shopping_cart'}
@@ -463,7 +456,7 @@ const ProductDetailPage: React.FC = () => {
                           </motion.span>
                         </AnimatePresence>
                         
-                        {/* Animación del texto */}
+                        {/* animación del texto */}
                         <AnimatePresence mode="wait">
                           <motion.span
                             key={isAdded ? 'added' : 'add'}
@@ -494,7 +487,7 @@ const ProductDetailPage: React.FC = () => {
                   )}
                 </motion.div>
 
-                {/* Compartir */}
+                {/* compartir */}
                 <motion.div 
                   className="mt-8 pt-6 border-t border-gray-200"
                   initial={{ opacity: 0 }}
@@ -525,7 +518,7 @@ const ProductDetailPage: React.FC = () => {
                           </motion.a>
                         ))}
                         
-                        {/* Copiar enlace */}
+                        {/* copiar enlace funcion */}
                         <motion.button 
                             onClick={handleCopyLink} 
                             className={`flex items-center gap-2 rounded-full py-2 px-4 text-sm font-medium border-2 ${
@@ -558,7 +551,7 @@ const ProductDetailPage: React.FC = () => {
             </div>
         </div>
         
-        {/* ===== PRODUCTOS RELACIONADOS ===== */}
+        {/* PRODUCTOS RELACIONADOS */}
         {relatedProducts.length > 0 && (
             <motion.section 
               className="px-4 py-8 mt-8 border-t border-gray-200"
@@ -622,36 +615,3 @@ const ProductDetailPage: React.FC = () => {
 };
 
 export default ProductDetailPage;
-
-/* ===== OPTIMIZACIONES IMPLEMENTADAS =====
-
-✅ ELIMINADO:
-1. import fetchProductBySlug
-2. import fetchProductsByCategory
-3. useState para product, category, relatedProducts, loading
-4. useEffect completo que cargaba datos de la API
-
-✅ AGREGADO:
-1. useData() para obtener categories, allProducts, loadingCatalog
-2. useMemo para buscar product (filtrado en memoria)
-3. useMemo para buscar category (filtrado en memoria)
-4. useMemo para buscar relatedProducts (filtrado en memoria)
-5. useEffect para seleccionar primer precio cuando carga el producto
-
-✅ ACTUALIZADO:
-1. Skeleton usa loadingCatalog en lugar de loading local
-2. Error 404 verifica !product || !category directamente
-3. Todo se resuelve en memoria (O(n) instantáneo)
-
-✅ RESULTADO:
-- ProductDetailPage ya NO hace peticiones HTTP
-- Búsqueda instantánea en memoria
-- Productos relacionados instantáneos
-- Sin delays ni loading al navegar entre productos
-
-✅ RENDIMIENTO:
-Antes: 2 peticiones HTTP (producto + relacionados) = ~800ms
-Después: 0 peticiones, filtrado en memoria = <1ms
-Mejora: 800x más rápido ⚡
-
-*/

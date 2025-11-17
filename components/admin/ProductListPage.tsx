@@ -1,4 +1,3 @@
-
 // Lista todos los productos en una tabla con opciones para editar/eliminar.
 // Incluye filtrado visual, notificaciones y modal de confirmación.
 
@@ -48,7 +47,7 @@ const ProductListPage: React.FC = () => {
             setLoading(true);
             setError(null);
             
-            // Cargar productos y categorías en paralelo (más rápido)
+            // Cargar productos y categorías en paralelo | más rápido
             const [productsData, categoriesData] = await Promise.all([
                 fetchAdminProducts(),
                 fetchAdminCategories()
@@ -88,7 +87,7 @@ const ProductListPage: React.FC = () => {
                 type: 'success', 
                 message: 'Producto eliminado con éxito.' 
             });
-            loadData(); // Recargar lista
+            loadData(); // recargar lista
         } catch (err: any) {
             setShowModal(false);
             setNotification({ 
@@ -163,7 +162,7 @@ const ProductListPage: React.FC = () => {
                                     {/* Producto imagen + nombre + slug */}
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            {/* Imagen */}
+                                            {/* imagen */}
                                             <div className="flex-shrink-0 h-10 w-10">
                                                 <img 
                                                     className="h-10 w-10 rounded-full object-cover" 
@@ -171,7 +170,7 @@ const ProductListPage: React.FC = () => {
                                                     alt={prod.nombre} 
                                                 />
                                             </div>
-                                            {/* Nombre y slug */}
+                                            {/* nombre y slug */}
                                             <div className="ml-4">
                                                 <div className="text-sm font-medium text-text-primary">
                                                     {prod.nombre}
@@ -216,12 +215,12 @@ const ProductListPage: React.FC = () => {
                                         </span>
                                     </td>
                                     
-                                    {/* Cantidad de precios */}
+                                    {/* cantidad de precios */}
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-semibold text-text-primary">
                                         {prod.productoPrecios.length}
                                     </td>
                                     
-                                    {/* Acciones Editar y Eliminar */}
+                                    {/* acciones Editar y Eliminar */}
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         {/* Link a editar */}
                                         <Link 
@@ -231,7 +230,7 @@ const ProductListPage: React.FC = () => {
                                             Editar
                                         </Link>
                                         
-                                        {/* Botón eliminar*/}
+                                        {/* botón eliminar*/}
                                         <button 
                                             onClick={() => handleDeleteClick(prod)} 
                                             className="text-red-600 hover:text-red-900"
