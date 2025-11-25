@@ -148,8 +148,8 @@ const Footer: React.FC = () => {
             
             <ul className="mt-4 space-y-2 text-sm">
               {navLinks.map((link, index) => (
-                <motion.li 
-                  key={link.key || link.to}
+                <motion.li
+                  key={link.to}
                   custom={index}
                   variants={linkVariants}
                   initial="hidden"

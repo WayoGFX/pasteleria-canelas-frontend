@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'; // para verificar autenticaci√
 // es como un guarda que si isAuthenticated es true entonces entra de lo contrario no
 // children son los componentes de administrador
 
-const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // estado de autenticaci√≥n
   // se inicia isAuthenticated | osea pregunta
   const { isAuthenticated } = useAuth();
