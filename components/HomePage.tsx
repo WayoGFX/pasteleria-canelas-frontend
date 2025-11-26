@@ -1,9 +1,9 @@
 // Página principal del catálogo
 // Incluye el Hero, productos populares carrusel, categorías, historia, testimonios y llamado a la acción
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { TESTIMONIALS } from '../constants'; // datos de testimonios
 import { Testimonial, Product } from '../types';
 import { useData } from '../context/DataContext'; // para obtener categorías y productos
@@ -79,218 +79,67 @@ const HomePage: React.FC = () => {
     // obtener todo desde el contexto ya cargado al inicio
     const { categories, seasonalProducts, loading: loadingCategories } = useData();
 
-    // estados de carrusel automático
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-    const [direction, setDirection] = useState(0); // 1 derecha y  -1 izquierda
-    const autoPlayInterval = useRef<NodeJS.Timeout | null>(null);
+    // Estados para auto-scroll del carrusel
+    const [currentScrollIndex, setCurrentScrollIndex] = useState(0);
+    const [isAutoScrolling, setIsAutoScrolling] = useState(true);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // PARALLAX
     // useRef es para permitir acceso al dom
     const heroRef = useRef<HTMLDivElement>(null);
-    
+
     // useScroll y useTransform para el efecto Parallax
-    const { scrollY } = useScroll({ 
+    const { scrollY } = useScroll({
         target: heroRef,
         offset: ["start start", "end start"]
     });
-    
+
     // Parallax scrolling en hero
-    const heroY = useTransform(scrollY, [0, 500], [0, 150]); 
+    const heroY = useTransform(scrollY, [0, 500], [0, 150]);
     // oscurecer
-    const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]); 
+    const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-
-    // AUTO-PLAY DEL CARRUSEL
-    // Usa seasonalProducts en lugar de popularProducts
+    // Auto-scroll del carrusel
     useEffect(() => {
-        // Solo auto-play si hay productos y está activado
-        if (isAutoPlaying && seasonalProducts.length > 0) {
-            autoPlayInterval.current = setInterval(() => {
-                setDirection(1); // Dirección derecha
-                setCurrentIndex((prevIndex) => 
-                    prevIndex + 1 >= seasonalProducts.length ? 0 : prevIndex + 1
-                );
-            }, 4000); // Cada 4 segundos
+        if (!isAutoScrolling || !scrollContainerRef.current || seasonalProducts.length === 0) {
+            return;
+        }
 
-            return () => {
-                if (autoPlayInterval.current) {
-                    clearInterval(autoPlayInterval.current);
+        const interval = setInterval(() => {
+            if (scrollContainerRef.current) {
+                const container = scrollContainerRef.current;
+                const cardWidth = 288;
+                const gap = 24; 
+                const scrollAmount = cardWidth + gap;
+
+                // calcular el siguiente índice
+                const nextIndex = (currentScrollIndex + 1) % seasonalProducts.length;
+
+                // si llega al final vuelve al inicio
+                if (nextIndex === 0) {
+                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    container.scrollTo({
+                        left: nextIndex * scrollAmount,
+                        behavior: 'smooth'
+                    });
                 }
-            };
-        }
-    }, [isAutoPlaying, seasonalProducts.length]);
 
-    // FUNCIONES DE NAVEGACIÓN
-    // seasonalProducts
-    const goToNext = () => {
-        setDirection(1);
-        setCurrentIndex((prevIndex) => 
-            prevIndex + 1 >= seasonalProducts.length ? 0 : prevIndex + 1
-        );
-        // reinicia el -play
-        pauseAutoPlay();
-        resumeAutoPlay();
+                setCurrentScrollIndex(nextIndex);
+            }
+        }, 3500); // cantidad de segundos | 3.5 segundakos
+
+        return () => clearInterval(interval);
+    }, [isAutoScrolling, currentScrollIndex, seasonalProducts.length]);
+
+    // pausa scroll cuando se hace hover
+    const handleMouseEnter = () => setIsAutoScrolling(false);
+    const handleMouseLeave = () => {
+        // se activa de nuevo a los dos segundos
+        setTimeout(() => setIsAutoScrolling(true), 2000);
     };
 
-    const goToPrev = () => {
-        setDirection(-1);
-        setCurrentIndex((prevIndex) => 
-            prevIndex - 1 < 0 ? seasonalProducts.length - 1 : prevIndex - 1
-        );
-        // reinicia el auto-play
-        pauseAutoPlay();
-        resumeAutoPlay();
-    };
-
-    const goToSlide = (index: number) => {
-        setDirection(index > currentIndex ? 1 : -1);
-        setCurrentIndex(index);
-        pauseAutoPlay();
-        resumeAutoPlay();
-    };
-
-    const pauseAutoPlay = () => {
-        setIsAutoPlaying(false);
-        if (autoPlayInterval.current) {
-            clearInterval(autoPlayInterval.current);
-        }
-    };
-
-    const resumeAutoPlay = () => {
-        setTimeout(() => setIsAutoPlaying(true), 1000); // Resume después de 1 segundo
-    };
-
-    // PRODUCTOS VISIBLES
-    // 4 productos
-    const getVisibleProducts = (isMobile: boolean) => {
-        if (seasonalProducts.length === 0) return [];
-        
-        const itemsToShow = isMobile ? 1 : 4;
-        const visibleProducts = [];
-        
-        for (let i = 0; i < itemsToShow; i++) {
-            const index = (currentIndex + i) % seasonalProducts.length;
-            visibleProducts.push(seasonalProducts[index]);
-        }
-        
-        return visibleProducts;
-    };
-
-    // VARIANTES DE ANIMACIÓN
-    const carouselVariants = {
-        enter: (direction: number) => ({
-            x: direction > 0 ? 300 : -300,
-            opacity: 0
-        }),
-        center: {
-            x: 0,
-            opacity: 1
-        },
-        exit: (direction: number) => ({
-            x: direction > 0 ? -300 : 300,
-            opacity: 0
-        })
-    };
-
-    // RENDERIZAR LISTA DE PRODUCTOS CON ESTADOS
-    const renderCarousel = () => {
-        // mostrar skeletons
-        if (loadingCategories) {
-            return (
-                <div className="flex gap-6 justify-center">
-                    {Array.from({ length: 4 }).map((_, index) => (
-                        <div key={`skel-${index}`} className="w-64 md:w-72 shrink-0 hidden md:block">
-                            <div className="animate-pulse">
-                                <div className="aspect-square w-full bg-gray-200 rounded-2xl"></div> 
-                                <div className="h-4 bg-gray-200 rounded mt-3 w-3/4"></div> 
-                                <div className="h-4 bg-gray-200 rounded mt-2 w-1/2"></div> 
-                                <div className="h-10 bg-gray-200 rounded-full mt-3"></div> 
-                            </div>
-                        </div>
-                    ))}
-                    {/* Skeleton movils */}
-                    <div className="w-64 md:hidden">
-                        <div className="animate-pulse">
-                            <div className="aspect-square w-full bg-gray-200 rounded-2xl"></div>
-                            <div className="h-4 bg-gray-200 rounded mt-3 w-3/4"></div>
-                            <div className="h-4 bg-gray-200 rounded mt-2 w-1/2"></div>
-                            <div className="h-10 bg-gray-200 rounded-full mt-3"></div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // si no hay productos de temporada entonces se muestra mensaje
-        if (seasonalProducts.length === 0) {
-            return (
-                <div className="text-center py-10">
-                    <p className="text-text-secondary">
-                        No hay productos populares disponibles en este momento.
-                    </p>
-                </div>
-            );
-        }
-
-        // tarjetas de producto
-        return (
-            <>
-                {/*4 productos*/}
-                <div className="hidden md:flex gap-6 justify-center overflow-hidden">
-                    <AnimatePresence mode="wait" custom={direction}>
-                        <motion.div
-                            key={currentIndex}
-                            custom={direction}
-                            variants={carouselVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                                x: { type: "spring", stiffness: 300, damping: 30 },
-                                opacity: { duration: 0.3 }
-                            }}
-                            className="flex gap-6"
-                        >
-                            {getVisibleProducts(false).map((product) => (
-                                <div key={product.id} className="w-64 md:w-72 shrink-0">
-                                    {/* componente de productos*/}
-                                    <ProductCard product={product} /> 
-                                </div>
-                            ))}
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-
-                {/* 1 producto */}
-                <div className="md:hidden flex justify-center overflow-hidden">
-                    <AnimatePresence mode="wait" custom={direction}>
-                        <motion.div
-                            key={currentIndex}
-                            custom={direction}
-                            variants={carouselVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                                x: { type: "spring", stiffness: 300, damping: 30 },
-                                opacity: { duration: 0.3 }
-                            }}
-                            className="w-64"
-                        >
-                            {getVisibleProducts(true).map((product) => (
-                                <div key={product.id}>
-                                    <ProductCard product={product} />
-                                </div>
-                            ))}
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-            </>
-        );
-    };
-
-    // HOMEPAGE COMPLETO
+    // PAGINA DE INICIO COMPLETO
     return (
         <div> 
             {/* HERO */}
@@ -356,14 +205,14 @@ const HomePage: React.FC = () => {
             <section id="popular-products" className="py-16 md:py-20 bg-gradient-to-b from-primary to-white/50">
                 <div className="container mx-auto px-4">
                     {/* título */}
-                    <motion.div 
+                    <motion.div
                         className="text-center mb-12"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={viewportConfig}
                         transition={{ duration: 0.6 }}
                     >
-                        <motion.span 
+                        <motion.span
                             className="inline-block px-4 py-1 bg-secondary/10 text-secondary text-sm font-semibold rounded-full mb-3"
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
@@ -372,7 +221,7 @@ const HomePage: React.FC = () => {
                         >
                             Temporada
                         </motion.span>
-                        
+
                         <h2 className="font-serif-display text-4xl md:text-5xl font-bold text-text-primary mb-2">
                             Lo más popular
                         </h2>
@@ -381,78 +230,96 @@ const HomePage: React.FC = () => {
                         </p>
                     </motion.div>
                 </div>
-                
-                {/*carrusel con navegación */}
-                <motion.div 
+
+                {/*carrusel*/}
+                <motion.div
                     className="relative"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={viewportConfig}
-                    // pausa y reanuda
-                    onMouseEnter={pauseAutoPlay} 
-                    onMouseLeave={resumeAutoPlay}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                 >
-                    <div className="container mx-auto px-4 relative py-8">
-                        {renderCarousel()}
-                    </div>         
-                    {/* Botones de navegación */}
-                    {!loadingCategories && seasonalProducts.length > 0 && (
-                        <>
-                            <motion.button
-                                onClick={goToPrev}
-                                aria-label="Anterior"
-                                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl transition-all"
-                                whileHover={{ scale: 1.1, backgroundColor: '#fff' }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                <span className="material-symbols-outlined text-2xl text-text-primary">
-                                    arrow_back
-                                </span>
-                            </motion.button>
-                            
-                            <motion.button
-                                onClick={goToNext}
-                                aria-label="Siguiente"
-                                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl transition-all"
-                                whileHover={{ scale: 1.1, backgroundColor: '#fff' }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                <span className="material-symbols-outlined text-2xl text-text-primary">
-                                    arrow_forward
-                                </span>
-                            </motion.button>
-                        </>
-                    )}
-                    {/* Indicadores */}
-                    {!loadingCategories && seasonalProducts.length > 0 && (
-                        <div className="flex justify-center gap-2 mt-8">
+                    <div className="container mx-auto px-4 py-8">
+                        {/* mostrar skeletons */}
+                        {loadingCategories ? (
+                            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+                                {Array.from({ length: 4 }).map((_, index) => (
+                                    <div key={`skel-${index}`} className="w-64 md:w-72 shrink-0 snap-center">
+                                        <div className="animate-pulse">
+                                            <div className="aspect-square w-full bg-gray-200 rounded-2xl"></div>
+                                            <div className="h-4 bg-gray-200 rounded mt-3 w-3/4"></div>
+                                            <div className="h-4 bg-gray-200 rounded mt-2 w-1/2"></div>
+                                            <div className="h-10 bg-gray-200 rounded-full mt-3"></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : seasonalProducts.length === 0 ? (
+                            <div className="text-center py-10">
+                                <p className="text-text-secondary">
+                                    No hay productos populares disponibles en este momento.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="relative">
+                                {/* degradado izquierdo */}
+                                <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white/50 to-transparent z-10 pointer-events-none hidden md:block" />
+
+                                {/* degradao derecho */}
+                                <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white/50 to-transparent z-10 pointer-events-none hidden md:block" />
+
+                                {/* scroll contenedor */}
+                                <div
+                                    ref={scrollContainerRef}
+                                    className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+                                >
+                                    {seasonalProducts.map((product) => (
+                                        <motion.div
+                                            key={product.id}
+                                            className="w-64 md:w-72 shrink-0 snap-center"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ duration: 0.4 }}
+                                        >
+                                            <ProductCard product={product} />
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* indicadores del carrusel */}
+                    {!loadingCategories && seasonalProducts.length > 1 && (
+                        <div className="flex justify-center items-center gap-2 mt-6">
                             {seasonalProducts.map((_, index) => (
                                 <button
                                     key={index}
-                                    onClick={() => goToSlide(index)}
-                                    aria-label={`Ir al producto ${index + 1}`}
-                                    className={`h-2 rounded-full transition-all duration-300 ${
-                                        index === currentIndex 
-                                            ? 'w-8 bg-secondary' 
-                                            : 'w-2 bg-text-secondary/30 hover:bg-text-secondary/50'
+                                    onClick={() => {
+                                        if (scrollContainerRef.current) {
+                                            const cardWidth = 288;
+                                            const gap = 24;
+                                            scrollContainerRef.current.scrollTo({
+                                                left: index * (cardWidth + gap),
+                                                behavior: 'smooth'
+                                            });
+                                            setCurrentScrollIndex(index);
+                                            setIsAutoScrolling(false);
+                                            setTimeout(() => setIsAutoScrolling(true), 3000);
+                                        }
+                                    }}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                                        index === currentScrollIndex
+                                            ? 'w-8 bg-secondary'
+                                            : 'w-1.5 bg-text-secondary/30 hover:bg-text-secondary/50'
                                     }`}
+                                    aria-label={`Ir al producto ${index + 1}`}
                                 />
                             ))}
                         </div>
                     )}
-                    
-                    {/* play */}
-                    <div className="flex justify-center mt-4">
-                        <button
-                            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                            className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-                        >
-                            <span className="material-symbols-outlined text-base">
-                                {isAutoPlaying ? 'pause' : 'play_arrow'}
-                            </span>
-                            <span>{isAutoPlaying ? 'Pausar' : 'Reanudar'}</span>
-                        </button>
-                    </div>
                 </motion.div>
             </section>
 
