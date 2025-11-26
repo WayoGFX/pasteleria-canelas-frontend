@@ -52,7 +52,7 @@ const AboutPage: React.FC = () => {
         {
             icon: "workspace_premium",
             title: "Calidad Suprema",
-            description: "Seleccionamos solo los mejores ingredientes, frescos y de origen local siempre que es posible, para garantizar un sabor inigualable."
+            description: "Seleccionamos solo los mejores ingredientes, frescos y el sazón que nos caracteriza."
         },
         {
             icon: "auto_stories",
@@ -62,16 +62,16 @@ const AboutPage: React.FC = () => {
         {
             icon: "favorite",
             title: "Pasión en Cada Detalle",
-            description: "Cada pastel, galleta y postre es una obra de arte creada con dedicación, amor y una pizca de magia para tu disfrute."
+            description: "Cada pastel, postre y pan dulce es una obra de arte creada con dedicación, amor y una pizca de magia para tu disfrute."
         }
     ];
 
     // datos de la galería
     const galleryImages = [
-        { src: "https://picsum.photos/seed/baking-process/500/500", alt: "Manos amasando" },
-        { src: "https://picsum.photos/seed/flour-hands/500/500", alt: "Ingredientes frescos" },
-        { src: "https://picsum.photos/seed/cake-decoration/500/500", alt: "Decorando un pastel" },
-        { src: "https://picsum.photos/seed/fresh-ingredients/500/500", alt: "Pastel terminado" }
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764129379/background_mlahih.jpg", alt: "Manos amasando" },
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764134605/x1_gaepk1.jpg", alt: "Ingredientes frescos" },
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764132639/historia2_nw4hc7.jpg", alt: "Decorando un pastel" },
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764134605/x2_hum6j5.jpg", alt: "Pastel terminado" }
     ];
 
     return (
@@ -124,7 +124,7 @@ const AboutPage: React.FC = () => {
                                 transition={{ duration: 0.3 }}
                             >
                                 <img 
-                                    src="https://picsum.photos/seed/founder/600/800" 
+                                    src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764133673/familia_tylupk.jpg" 
                                     alt="Fundadora de la pastelería Canela" 
                                     loading="lazy" 
                                     className="w-full h-full object-cover"
@@ -156,7 +156,9 @@ const AboutPage: React.FC = () => {
                                     viewport={viewportConfig}
                                     transition={{ delay: 0.3 }}
                                 >
-                                    "Canela nació de un sueño y las recetas de mi abuela. Cada postre que creamos es un tributo a la tradición familiar, horneado con la misma paciencia y amor que ella me enseñó. Nuestro secreto no está solo en los ingredientes de la más alta calidad, sino en la alegría de compartir algo hecho a mano, pensado para endulzar tu día y celebrar tus momentos más especiales."
+                                    "Canelas no es solo una pastelería; es el dulce legado de una familia con profundas raíces en Apopa. Nacimos del horno de la icónica Panadería San Judas, una tradición que comenzó con nuestros abuelos en 1950.
+                                    
+                                    Cada postre que creamos es un tributo a esa larga historia. Es el sabor auténtico que pasó por las manos de nuestros padres en 1999 y que hoy, con la misma dedicación y pasión, lidera Carlos Lara desde 2010. Nuestro secreto no está solo en los ingredientes de la más alta calidad, sino en la paciencia y el amor que se hornean en cada pieza, una herencia que ha endulzado generaciones de salvadoreños"
                                 </motion.p>
                                 <motion.p
                                     initial={{ opacity: 0 }}
@@ -164,7 +166,7 @@ const AboutPage: React.FC = () => {
                                     viewport={viewportConfig}
                                     transition={{ delay: 0.4 }}
                                 >
-                                    "Nuestra misión es ser parte de tus celebraciones y convertir días ordinarios en recuerdos dulces. Creemos que un buen postre tiene el poder de unir personas, crear sonrisas y confortar el alma. Por eso ponemos el corazón en cada detalle, desde la mezcla hasta la decoración final."
+                                    "Nuestra misión es llevar la calidez de nuestro hogar a tu mesa y ser parte de tus momentos más significativos. Creemos que un buen postre tiene el poder de unir familias, evocar recuerdos y confortar el alma. Por eso, ponemos el corazón en cada detalle, desde la mezcla inicial de la receta de 1950 hasta la decoración final."
                                 </motion.p>
                             </div>
                             
@@ -175,7 +177,7 @@ const AboutPage: React.FC = () => {
                                 viewport={viewportConfig}
                                 transition={{ delay: 0.5 }}
                             >
-                                - Elena V.
+                                - Carlos Lara.
                             </motion.p>
                         </motion.div>
                     </div>
@@ -237,7 +239,7 @@ const AboutPage: React.FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={viewportConfig}
                         >
-                            Un Vistazo a Nuestro Como Trabajamos
+                            Trabajamos con amor
                         </motion.h3>
                         
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

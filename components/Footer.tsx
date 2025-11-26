@@ -57,12 +57,12 @@ const Footer: React.FC = () => {
     },
     {
       name: "Instagram",
-      href: "#",
+      href: "https://www.instagram.com/wayo.rodriguez/?hl=es-la",
       icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
     },
     {
       name: "Facebook",
-      href: "#",
+      href: "https://www.facebook.com/canela.s16",
       icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
     }
   ];
@@ -195,7 +195,7 @@ const Footer: React.FC = () => {
                 whileHover={{ x: 2 }}
                 transition={{ duration: 0.2 }}
               >
-                Av. Siempreviva 742, Springfield
+                RN 1E, Apopa, El Salvador
               </motion.p>
               
               <motion.p whileHover={{ x: 2 }}>
@@ -203,7 +203,7 @@ const Footer: React.FC = () => {
                   href="tel:+50373264065" 
                   className="hover:text-white transition-colors"
                 >
-                  (503) 7326-4065
+                  +503 7326-4065
                 </a>
               </motion.p>
               

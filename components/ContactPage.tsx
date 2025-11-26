@@ -55,29 +55,29 @@ const ContactPage: React.FC = () => {
         {
             icon: "location_on",
             label: "Dirección",
-            content: "Av. Siempreviva 742, Springfield",
+            content: "RN 1E, Apopa, El Salvador",
             type: "text"
         },
         {
             icon: "phone",
             label: "Teléfono",
-            content: "(123) 456-7890",
+            content: "+503 73264065",
             type: "tel",
-            href: "tel:+521234567890"
+            href: "tel:+50373264065"
         },
         {
             icon: "mail",
             label: "Email",
-            content: "hola@canela.com",
+            content: "canelaspasteleria16@gmail.com",
             type: "email",
-            href: "mailto:hola@canela.com"
+            href: "canelaspasteleria16@gmail.com"
         }
     ];
 
     // horarios
     const schedule = [
-        { day: "Lunes a Sábado:", hours: "9am - 8pm" },
-        { day: "Domingo:", hours: "Cerrado" }
+        { day: "Lunes a Sábado:", hours: "7am - 6pm" },
+        { day: "Domingo:", hours: "8am - 5pm" }
     ];
 
     // redes sociales
@@ -90,12 +90,12 @@ const ContactPage: React.FC = () => {
         {
             name: "Instagram",
             icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>,
-            href: "#"
+            href: "https://www.instagram.com/wayo.rodriguez/?hl=es-la"
         },
         {
             name: "Facebook",
             icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>,
-            href: "#"
+            href: "https://www.facebook.com/canela.s16"
         }
     ];
 
@@ -156,7 +156,7 @@ const ContactPage: React.FC = () => {
                                 whileHover={{ scale: 1.02 }}
                             >
                                 <iframe 
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.593339943482!2d-99.1686338855955!3d19.43260774542155!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8d39f7a55c5%3A0x8a7a9a8a7a9a8a7a!2sEl%20%C3%81ngel%20de%20la%20Independencia!5e0!3m2!1ses-419!2smx!4v1628797919871!5m2!1ses-419!2smx" 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.6025493105262!2d-89.1827268143961!3d13.80281676156074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f633bdca3624747%3A0x8568af785b0346f8!2sCanelas!5e0!3m2!1ses-419!2ssv!4v1764132878067!5m2!1ses-419!2ssv" 
                                     width="100%" 
                                     height="100%" 
                                     style={{ border: 0 }} 
@@ -290,7 +290,7 @@ const ContactPage: React.FC = () => {
                                 whileHover={{ scale: 1.02 }}
                             >
                                 <motion.img 
-                                    src="https://picsum.photos/seed/eventcake/800/600" 
+                                    src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764132639/historia2_nw4hc7.jpg" 
                                     alt="Pastel para eventos especiales" 
                                     className="w-full h-full object-cover" 
                                     loading="lazy"

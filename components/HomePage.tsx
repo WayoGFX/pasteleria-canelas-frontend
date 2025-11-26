@@ -3,7 +3,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { TESTIMONIALS } from '../constants'; // datos de testimonios
 import { Testimonial, Product } from '../types';
 import { useData } from '../context/DataContext'; // para obtener categorías y productos
@@ -84,21 +84,6 @@ const HomePage: React.FC = () => {
     const [isAutoScrolling, setIsAutoScrolling] = useState(true);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    // PARALLAX
-    // useRef es para permitir acceso al dom
-    const heroRef = useRef<HTMLDivElement>(null);
-
-    // useScroll y useTransform para el efecto Parallax
-    const { scrollY } = useScroll({
-        target: heroRef,
-        offset: ["start start", "end start"]
-    });
-
-    // Parallax scrolling en hero
-    const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-    // oscurecer
-    const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-
     // Auto-scroll del carrusel
     useEffect(() => {
         if (!isAutoScrolling || !scrollContainerRef.current || seasonalProducts.length === 0) {
@@ -143,27 +128,14 @@ const HomePage: React.FC = () => {
     return (
         <div> 
             {/* HERO */}
-            <motion.section 
-                ref={heroRef}
-                className="relative h-[60vh] md:h-[calc(100vh-80px)] bg-cover bg-center flex items-center overflow-hidden" 
-                style={{ 
-                    backgroundImage: 'url(https://picsum.photos/seed/hero-background/1920/1080)' 
+            <motion.section
+                className="relative h-[60vh] md:h-[calc(100vh-80px)] bg-cover bg-center flex items-center overflow-hidden"
+                style={{
+                    backgroundImage: 'url(https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764129379/background_mlahih.jpg)'
                 }}
             >
-                {/* Imagen de fondo */}
-                <motion.div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ 
-                        backgroundImage: 'url(https://picsum.photos/seed/hero-background/1920/1080)',
-                        y: heroY
-                    }}
-                />
-                
                 {/* Overlay oscuro*/}
-                <motion.div 
-                    className="absolute inset-0 bg-black/40"
-                    style={{ opacity: heroOpacity }}
-                />
+                <div className="absolute inset-0 bg-black/60" />
                 
                 {/* Contenido*/}
                 <div className="relative container mx-auto px-4 text-center text-white z-10">
@@ -379,10 +351,7 @@ const HomePage: React.FC = () => {
                             Nuestra Historia
                         </h2>
                         <p className="text-text-secondary text-lg mb-6 leading-relaxed">
-                            En Canela, cada receta cuenta una historia de tradición y amor por la repostería. 
-                            Nacimos de un sueño familiar: compartir la alegría a través de postres que evocan 
-                            calidez y hogar. Utilizamos solo los ingredientes más frescos y de la más alta 
-                            calidad para crear sabores que perduran en la memoria.
+                            Cada postre que creamos es un tributo a esa larga historia. Es el sabor auténtico que pasó por las manos de nuestros padres en 1999 y que hoy, con la misma dedicación y pasión, lidera Carlos Lara desde 2010. Nuestro secreto no está solo en los ingredientes de la más alta calidad, sino en la paciencia y el amor que se hornean en cada pieza, una herencia que ha endulzado generaciones de salvadoreños.
                         </p>
                         {/* página de nosotros */}
                         <motion.div whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}> 
@@ -408,7 +377,7 @@ const HomePage: React.FC = () => {
                         whileHover={{ scale: 1.02 }}
                     >
                         <img 
-                            src="https://picsum.photos/seed/bakery/600/400" 
+                            src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764132639/historia2_nw4hc7.jpg" 
                             alt="Interior de la pastelería Canela" 
                             loading="lazy" 
                             className="w-full h-full object-cover"
@@ -462,7 +431,7 @@ const HomePage: React.FC = () => {
                         {/* Columna de la imagen */}
                         <div className="relative h-80 lg:h-full min-h-[320px] order-1 lg:order-2">
                             <img 
-                                src="https://picsum.photos/seed/contact-cta/800/600" 
+                                src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764129379/background_mlahih.jpg" 
                                 alt="Postres deliciosos" 
                                 loading="lazy"
                                 className="w-full h-full object-cover"

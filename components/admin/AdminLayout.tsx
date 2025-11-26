@@ -86,9 +86,6 @@ const AdminLayout: React.FC = () => {
                         <span>Productos</span>
                     </NavLink>
                 </nav>
-            </div>
-            
-            {/* Botón de cerrar sesión*/}
             <div className="mt-auto">
                 <button 
                     onClick={() => {
@@ -101,6 +98,10 @@ const AdminLayout: React.FC = () => {
                     <span>Cerrar Sesión</span>
                 </button>
             </div>
+            </div>
+            
+            {/* Botón de cerrar sesión*/}
+
         </>
     );
 
