@@ -194,14 +194,15 @@ const Header: React.FC = () => {
                 <span className="material-symbols-outlined text-2xl md:text-3xl">menu</span>
             </motion.button>
             
-            {/* nombre */}
-            <motion.h1 
-              className="font-serif-display text-xl md:text-2xl lg:text-3xl font-bold text-text-primary"
+            {/* logo */}
+            <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
-              <Link to="/">Canelas</Link>
-            </motion.h1>
+              <Link to="/">
+                <img src="/assets/logocanelas.png" alt="Canelas Logo" className="h-10 md:h-12 lg:h-14" />
+              </Link>
+            </motion.div>
           </div>
           
           {/* NAVEGACIÓN DESKTOP */}

@@ -297,7 +297,7 @@ const ProductDetailPage: React.FC = () => {
                 </motion.div>
                 
                 {/* detalles dependiendo su categoría */}
-                <motion.div 
+                {/* <motion.div 
                   className="grid grid-cols-2 gap-3"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -307,7 +307,7 @@ const ProductDetailPage: React.FC = () => {
                     <FeatureIcon icon="eco" text="Ingredientes Frescos" delay={0.6} />
                     {product.category === 'pasteles' && <FeatureIcon icon="cake" text="Ideal para Celebrar" delay={0.7} />}
                     {product.category === 'panaderia' && <FeatureIcon icon="breakfast_dining" text="Perfecto para el Desayuno" delay={0.7} />}
-                </motion.div>
+                </motion.div> */}
 
                 {/* selector de tamaño y precio */}
                 {hasPrices && !isCustomCake && (
