@@ -296,6 +296,11 @@ const ProductFormPage: React.FC = () => {
     // envío del formulario mientras se carga en la api
     const [submitting, setSubmitting] = useState(false);
     
+    // Estados para la subida de imágenes
+    const [imageSourceType, setImageSourceType] = useState('url'); // 'url' o 'upload'
+    const [imageUploading, setImageUploading] = useState(false);
+
+
     // FUNCIONES DE CARGA DE DATOS
     // es async y puede llamar desde useEffect
     // se usa como callback para recargar después de los cambios
@@ -379,6 +384,50 @@ const ProductFormPage: React.FC = () => {
                 ...prev, 
                 [target.name]: target.value    // string
             }));
+        }
+    };
+
+    // integracion con cloudinary
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+        const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+        if (!cloudName || !uploadPreset || cloudName === "your_cloud_name") {
+            setError("La configuración de Cloudinary no está completa revisa tus variables de entorno en el archivo .env");
+            return;
+        }
+
+        setImageUploading(true);
+        setError(null);
+
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+        uploadFormData.append('upload_preset', uploadPreset);
+
+        try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                method: 'POST',
+                body: uploadFormData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al subir la imagen.');
+            }
+
+            const data = await response.json();
+            
+            setFormData(prev => ({
+                ...prev,
+                imagenUrl: data.secure_url
+            }));
+
+        } catch (err: any) {
+            setError(err.message || "No se pudo subir la imagen.");
+        } finally {
+            setImageUploading(false);
         }
     };
 
@@ -499,29 +548,85 @@ const ProductFormPage: React.FC = () => {
                         ></textarea>
                     </div>
                     
-                    {/*uRL de Imagen */}
+                    {/* SECCIÓN DE IMAGEN CON OPCIÓN DE SUBIDA */}
                     <div>
-                        <label htmlFor="imagenUrl" className="block text-sm font-medium text-text-primary">
-                            URL de la Imagen
+                        <label className="block text-sm font-medium text-text-primary mb-2">
+                            Imagen del Producto
                         </label>
-                        <input 
-                            type="text" 
-                            name="imagenUrl" 
-                            id="imagenUrl" 
-                            value={formData.imagenUrl} 
-                            onChange={handleChange} 
-                            required 
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-secondary focus:ring-secondary sm:text-sm" 
-                            placeholder="https://picsum.photos/seed/..."
-                        />  
+
+                        {/* Selector de tipo de imagen: URL o Subida */}
+                        <div className="flex items-center gap-4 mb-3">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="radio"
+                                    name="imageSource"
+                                    value="url"
+                                    checked={imageSourceType === 'url'}
+                                    onChange={() => setImageSourceType('url')}
+                                    className="h-4 w-4 text-secondary focus:ring-secondary"
+                                />
+                                <span className="text-sm">Usar URL</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="radio"
+                                    name="imageSource"
+                                    value="upload"
+                                    checked={imageSourceType === 'upload'}
+                                    onChange={() => setImageSourceType('upload')}
+                                    className="h-4 w-4 text-secondary focus:ring-secondary"
+                                />
+                                <span className="text-sm">Subir archivo</span>
+                            </label>
+                        </div>
+                        
+                        {/* Render condicional input de URL o de archivo */}
+                        {imageSourceType === 'url' ? (
+                             <div>
+                                <label htmlFor="imagenUrl" className="block text-sm font-medium text-gray-500">
+                                    URL de la Imagen
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="imagenUrl" 
+                                    id="imagenUrl" 
+                                    value={formData.imagenUrl} 
+                                    onChange={handleChange} 
+                                    required 
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-secondary focus:ring-secondary sm:text-sm" 
+                                    placeholder="https://example.com/image.jpg"
+                                />
+                            </div>
+                        ) : (
+                            <div>
+                                <label htmlFor="imageUpload" className="block text-sm font-medium text-gray-500">
+                                    Seleccionar archivo
+                                </label>
+                                <input 
+                                    type="file"
+                                    id="imageUpload"
+                                    accept="image/png, image/jpeg, image/webp"
+                                    onChange={handleImageUpload}
+                                    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary/10 file:text-secondary hover:file:bg-secondary/20"
+                                />
+                                {imageUploading && (
+                                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
+                                        <div className="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-secondary"></div>
+                                        <span>Subiendo imagen...</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Vista previa */}
                         {formData.imagenUrl && (
                             <div className="mt-3">
-                            <p className="text-sm text-gray-600 mb-2">Vista previa:</p>
-                            <ImagePreview 
-                                imageUrl={formData.imagenUrl} 
-                                alt={formData.nombre || 'Producto'} 
-                                className="w-48 h-48"
-                            />
+                                <p className="text-sm text-gray-600 mb-2">Vista previa:</p>
+                                <ImagePreview 
+                                    imageUrl={formData.imagenUrl} 
+                                    alt={formData.nombre || 'Producto'} 
+                                    className="w-48 h-48"
+                                />
                             </div>
                         )}
                     </div>
@@ -584,10 +689,10 @@ const ProductFormPage: React.FC = () => {
                     {/* botón Guardar */}
                     <button 
                         type="submit" 
-                        disabled={submitting} 
+                        disabled={submitting || imageUploading} 
                         className="bg-secondary text-white font-bold py-2 px-4 rounded-lg transition-transform hover:scale-105 disabled:bg-opacity-50 disabled:cursor-not-allowed"
                     >
-                        {submitting ? 'Guardando...' : 'Guardar Producto'}
+                        {submitting ? 'Guardando...' : (imageUploading ? 'Esperando imagen...' : 'Guardar Producto')}
                     </button>
                 </div>
             </form>

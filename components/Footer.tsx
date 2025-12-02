@@ -92,14 +92,14 @@ const Footer: React.FC = () => {
             whileInView="visible"
             viewport={viewportConfig}
           >
-            <motion.h3 
-              className="font-serif-display text-3xl font-bold"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              Canela
-            </motion.h3>
-            
+                       <motion.div
+                         whileHover={{ scale: 1.05 }}
+                         transition={{ duration: 0.2 }}
+                       >
+                         <Link to="/">
+                           <img src="/assets/logocanelas.png" alt="Canela Logo" className="h-14" />
+                         </Link>
+                       </motion.div>            
             <motion.p 
               className="mt-2 text-sm text-primary/80"
               initial={{ opacity: 0 }}
