@@ -200,10 +200,10 @@ const Footer: React.FC = () => {
               
               <motion.p whileHover={{ x: 2 }}>
                 <a 
-                  href="tel:+50373264065" 
+                  href="tel:+50361252703" 
                   className="hover:text-white transition-colors"
                 >
-                  +503 7326-4065
+                  +503 6125-2703
                 </a>
               </motion.p>
               

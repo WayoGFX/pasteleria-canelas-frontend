@@ -61,9 +61,9 @@ const ContactPage: React.FC = () => {
         {
             icon: "phone",
             label: "Teléfono",
-            content: "+503 73264065",
+            content: "+503 61252703",
             type: "tel",
-            href: "tel:+50373264065"
+            href: "tel:+50361252703"
         },
         {
             icon: "mail",
