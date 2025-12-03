@@ -192,66 +192,60 @@ const CustomCakePage: React.FC = () => {
                 {/* COLUMNA DERECHA: VISUALIZADOR Y RESUMEN */}
                 <div className="order-1 md:order-2 w-full md:w-2/5 md:sticky md:top-24 h-fit z-10 mb-8 md:mb-0">
                     {/* VISUALIZADOR DE PASTEL IMAGEN DINÁMICA */}
-                    {/* con JSON.stringify(selections) fuerza un re-render cuando cambia alguna selección */}
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={JSON.stringify(selections)}
-                            className="relative aspect-square w-full rounded-2xl bg-gray-100 overflow-hidden shadow-lg border-4 border-white"
-                            variants={visualizerVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
-                        >
-                            {/* placeholder de fondo se muestra detrás de las imágenes */}
-                            <div className="absolute inset-0 flex items-center justify-center -z-10">
-                                <div className="text-center text-gray-400 p-4">
-                                    <motion.span 
-                                        className="material-symbols-outlined text-5xl block"
-                                        animate={{ 
-                                            rotate: [0, 10, -10, 0],
-                                            scale: [1, 1.1, 1]
-                                        }}
-                                        transition={{ 
-                                            duration: 2,
-                                            repeat: Infinity,
-                                            repeatType: "reverse"
-                                        }}
-                                    >
-                                        palette
-                                    </motion.span>
-                                    <p className="font-semibold mt-2">Observa cómo se construye tu pastel</p>
-                                    <p className="text-xs mt-1">Las imágenes son representativas de cada capa.</p>
-                                </div>
-                            </div>
-                            
-                            {/* CAPAS RENDERIZA IMÁGENES SUPERPUESTAS */}
-                            {/* cada sección con imagen que se superpone */}
-                            <AnimatePresence>
-                                {CUSTOM_CAKE_OPTIONS.map((section, index) => {
-                                    const selectedOptionId = selections[section.id]; // ID de la opción seleccionada
-                                    const selectedOption = section.options.find(opt => opt.id === selectedOptionId); // Objeto completo
-                                    
-                                    // Si hay opción seleccionada Y no es size
-                                    if (selectedOption && section.id !== 'size') {
-                                        return (
-                                            <motion.img 
-                                                key={`${section.id}-${selectedOptionId}`}
-                                                src={selectedOption.image} 
-                                                alt={selectedOption.name} 
-                                                className="absolute inset-0 w-full h-full object-contain" 
-                                                style={{ zIndex: index }} // z-index basado en el orden
-                                                variants={layerVariants}
-                                                initial="hidden"
-                                                animate="visible"
-                                                exit="hidden"
-                                            />
-                                        );
-                                    }
-                                    return null; // No renderiza nada si no hay imagen
-                                })}
-                            </AnimatePresence>
-                        </motion.div>
-                    </AnimatePresence>
+                    <motion.div
+                        className="relative aspect-square w-full rounded-2xl bg-gray-100 overflow-hidden shadow-lg border-4 border-white"
+                        variants={visualizerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        {/* IMAGEN DE BASE ESTÁTICA */}
+                        <motion.img
+                            src="/assets/personalizados/base.jpg"
+                            alt="Base del pastel"
+                            className="absolute inset-0 w-full h-full object-contain"
+                            style={{ zIndex: 0 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5 }}
+                        />
+                        
+                        {/* CAPAS DINÁMICAS SUPERPUESTAS */}
+                        <AnimatePresence>
+                            {CUSTOM_CAKE_OPTIONS.map((section, index) => {
+                                const selectedOptionId = selections[section.id];
+                                const selectedOption = section.options.find(opt => opt.id === selectedOptionId);
+                                
+                                // IDs de secciones que no deben renderizar una imagen
+                                const nonVisibleIds: string[] = [];
+
+                                // Renderiza
+                                // La opción está seleccionada
+
+                                if (selectedOption && selectedOption.image && !selectedOption.image.includes('invisible') && !nonVisibleIds.includes(section.id)) {
+                                    return (
+                                        <motion.img 
+                                            key={`${section.id}-${selectedOptionId}`}
+                                            src={selectedOption.image} 
+                                            alt={selectedOption.name} 
+                                            className="absolute inset-0 w-full h-full object-contain"
+                                            // Las capas empiezan en z-index 1 para estar sobre la base estática
+                                            style={{ zIndex: index + 1 }}
+                                            variants={layerVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="hidden"
+                                        />
+                                    );
+                                }
+                                return null;
+                            })}
+                        </AnimatePresence>
+
+                        {/* Placeholder de fondo */}
+                        <div className="absolute inset-0 flex items-center justify-center -z-10">
+                            <p className="text-center text-gray-400 p-4">Observa cómo se construye tu pastel</p>
+                        </div>
+                    </motion.div>
                      
                      {/* CARD DE RESUMEN */}
                      <motion.div 

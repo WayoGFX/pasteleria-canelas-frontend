@@ -21,7 +21,7 @@
         slug: 'pasteles',                   
         name: 'Pasteles',                  
         description: 'Nuestra selección...',
-        image: 'https://picsum.photos/...', 
+        image: 'https://cdn.pixabay.com/photo/2019/11/22/23/22/food-4645917_1280.png', 
         icon: 'cake', 
     },
     ];
@@ -30,7 +30,7 @@
         id: 'pastel-chocolate-fudge',       
         name: 'Pastel de Chocolate Fudge', 
         description: 'Intenso pastel...',
-        image: 'https://picsum.photos/...',
+        image: 'https://cdn.pixabay.com/photo/2019/11/22/23/22/food-4645917_1280.png',
         category: 'pasteles',   
         prices: [     
         { size: '1 porción', price: 85.00 },
@@ -51,7 +51,7 @@
     const getImageUrl = (imageName: string) => {
         // si no hay nombre de imagen devolver un placeholder
         if (!imageName) {
-            return 'https://picsum.photos/seed/placeholder/500/500';
+            return 'https://cdn.pixabay.com/photo/2019/11/22/23/22/food-4645917_1280.png';
         }
         // si ya es una URL completa devolverla tal cual
         if (imageName.startsWith('http')) {
