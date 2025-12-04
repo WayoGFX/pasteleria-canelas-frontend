@@ -65,7 +65,7 @@ const App: React.FC = () => {
           <Header />
           
           {/* contenido principal */}
-          <main className="flex-grow relative isolate pt-16 md:pt-20">
+          <main className="flex-grow relative pt-16 md:pt-20">
             <Routes>
               {/* ruta de inicio */}
               <Route path="/" element={<HomePage />} />
