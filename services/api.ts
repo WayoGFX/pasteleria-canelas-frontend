@@ -255,7 +255,7 @@ export const fetchInitialCatalog = async (): Promise<CatalogoInicial> => {
     }) => apiRequest<AdminProductPrice>('/api/Precios', 'POST', data);
 
     // actualizar
-    export const updatePrice = (id: number, data: Omit<AdminProductPrice, 'productoPrecioId'>) => 
+    export const updatePrice = (id: number, data: Partial<AdminProductPrice>) => 
         apiRequest<void>(`/api/Precios/${id}`, 'PUT', data);
 
     // eliminar

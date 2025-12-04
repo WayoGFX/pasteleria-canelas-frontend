@@ -83,19 +83,35 @@ const PriceManager: React.FC<{
     // se modifica los input y se llama a la api con PUT para editarlos
     // recarga la lista
     const handleUpdatePrice = async () => {
-        if (!editingPrice) return; // No hay nada en edición
-        
-        // Llamar a la API para actualizar
-        await updatePrice(editingPrice.productoPrecioId, {
-            descripcionPrecio: editingPrice.descripcionPrecio,
-            precio: editingPrice.precio
-        });
-        
-        // Salir del modo edición
-        setEditingPrice(null);
-        
-        // Recargar datos
-        onPricesUpdate();
+        if (!editingPrice) return;
+
+        const isValid = 
+            editingPrice.descripcionPrecio.trim() !== '' &&
+            !isNaN(editingPrice.precio) &&
+            editingPrice.precio > 0;
+
+        if (!isValid) {
+            console.error("Datos de precio inválidos, cancelando edición.");
+            setEditingPrice(null); // Revierte la UI al estado inicial
+            return;
+        }
+
+        try {
+            // El payload ahora debe incluir el ID para que coincida con el de la URL en la API
+            const payload = {
+                productoPrecioId: editingPrice.productoPrecioId,
+                descripcionPrecio: editingPrice.descripcionPrecio,
+                precio: editingPrice.precio
+            };
+
+            await updatePrice(editingPrice.productoPrecioId, payload);
+            
+            setEditingPrice(null);
+            onPricesUpdate();
+        } catch (error) {
+            console.error("No se pudo actualizar el precio:", error);
+            // Se podría añadir un estado para mostrar este error en la UI
+        }
     };
     
     // preparar eliminación
@@ -164,6 +180,7 @@ const PriceManager: React.FC<{
                                 
                                 {/* Botón Guardar */}
                                 <button 
+                                    type="button"
                                     onClick={handleUpdatePrice} 
                                     className="text-green-600 hover:text-green-800 p-1"
                                 >
@@ -172,6 +189,7 @@ const PriceManager: React.FC<{
                                 
                                 {/* Botón Cancelar*/}
                                 <button 
+                                    type="button"
                                     onClick={() => setEditingPrice(null)} 
                                     className="text-gray-500 hover:text-gray-700 p-1"
                                 >
@@ -188,6 +206,7 @@ const PriceManager: React.FC<{
                                 
                                 {/* Botón Editar */}
                                 <button 
+                                    type="button"
                                     onClick={() => setEditingPrice(price)} 
                                     className="text-secondary hover:text-secondary/80 p-1"
                                 >
@@ -196,6 +215,7 @@ const PriceManager: React.FC<{
                                 
                                 {/* Botón Eliminar */}
                                 <button 
+                                    type="button"
                                     onClick={() => handleDeleteClick(price)} 
                                     className="text-red-600 hover:text-red-900 p-1"
                                 >
