@@ -290,7 +290,7 @@ const ContactPage: React.FC = () => {
                                 whileHover={{ scale: 1.02 }}
                             >
                                 <motion.img 
-                                    src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764132639/historia2_nw4hc7.jpg" 
+                                    src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817378/banner_sgrmq9.jpg" 
                                     alt="Pastel para eventos especiales" 
                                     className="w-full h-full object-cover" 
                                     loading="lazy"

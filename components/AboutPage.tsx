@@ -68,10 +68,10 @@ const AboutPage: React.FC = () => {
 
     // datos de la galería
     const galleryImages = [
-        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764129379/background_mlahih.jpg", alt: "Manos amasando" },
-        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764134605/x1_gaepk1.jpg", alt: "Ingredientes frescos" },
-        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764132639/historia2_nw4hc7.jpg", alt: "Decorando un pastel" },
-        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764134605/x2_hum6j5.jpg", alt: "Pastel terminado" }
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817487/129837288_422934825759763_1009202961766069853_n_mkqmyo.jpg", alt: "Manos amasando" },
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817473/470223895_122147224718342769_4784658884223870312_n_g7pkmo.jpg" },
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817488/536995289_122183368604342769_8220553315128757751_n_mpkacn.jpg", alt: "Decorando un pastel" },
+        { src: "https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817499/584630324_122192977082342769_425733422902685364_n_ze26iw.jpg", alt: "Pastel terminado" }
     ];
 
     return (

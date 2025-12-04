@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
             <motion.section
                 className="relative h-[60vh] md:h-[calc(100vh-80px)] bg-cover bg-center flex items-center overflow-hidden"
                 style={{
-                    backgroundImage: 'url(https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764129379/background_mlahih.jpg)'
+                    backgroundImage: 'url(https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817378/banner_sgrmq9.jpg)'
                 }}
             >
                 {/* Overlay oscuro*/}
@@ -377,7 +377,7 @@ const HomePage: React.FC = () => {
                         whileHover={{ scale: 1.02 }}
                     >
                         <img 
-                            src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764132639/historia2_nw4hc7.jpg" 
+                            src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764817378/banner_sgrmq9.jpg" 
                             alt="Interior de la pastelería Canela" 
                             loading="lazy" 
                             className="w-full h-full object-cover"
@@ -431,7 +431,7 @@ const HomePage: React.FC = () => {
                         {/* Columna de la imagen */}
                         <div className="relative h-80 lg:h-full min-h-[320px] order-1 lg:order-2">
                             <img 
-                                src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764129379/background_mlahih.jpg" 
+                                src="https://res.cloudinary.com/dqqdbuv3h/image/upload/v1764814507/pastel-melocoton-fresas_lvyjak.jpg" 
                                 alt="Postres deliciosos" 
                                 loading="lazy"
                                 className="w-full h-full object-cover"

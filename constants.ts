@@ -25,11 +25,12 @@ export const TESTIMONIALS = [
 export const CUSTOM_CAKE_OPTIONS: CustomCakeSection[] = [
   {
     id: 'size',
-    name: 'Tamaño (Personas)',
+    name: 'Tamaño (Porciones)',
     options: [
-      { id: 'small', name: '10-15', image: '/assets/personalizados/tamano/10-15personas.png' },
-      { id: 'medium', name: '20-25', image: '/assets/personalizados/tamano/20-25personas.png' },
-      { id: 'large', name: '30-40', image: '/assets/personalizados/tamano/30-40personas.png' },
+      { id: 'small', name: '10', image: '/assets/personalizados/tamano/10porciones.png' },
+      { id: 'medium', name: '15', image: '/assets/personalizados/tamano/15porciones.png' },
+      { id: 'large', name: '20', image: '/assets/personalizados/tamano/20porciones.png' },
+      { id: 'extralarge', name: '30', image: '/assets/personalizados/tamano/30porciones.png' },
     ],
   },
   {
