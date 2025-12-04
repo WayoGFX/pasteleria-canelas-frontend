@@ -117,7 +117,7 @@ const ProductListPage: React.FC = () => {
                         to="/admin/products/new" 
                         className="bg-secondary text-white font-bold py-2 px-4 rounded-lg transition-transform hover:scale-105"
                     >
-                        + Crear Nuevo
+                        + Crear Producto
                     </Link>
                 </div>
                 <div className="md:hidden bg-blue-50 border-b border-blue-200 px-4 py-2 text-xs text-blue-700 flex items-center gap-2">

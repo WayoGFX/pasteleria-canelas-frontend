@@ -63,7 +63,7 @@ const CategoryListPage: React.FC = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="font-serif-display text-4xl font-bold text-text-primary">Categorías</h1>
                     <Link to="/admin/categories/new" className="bg-secondary text-white font-bold py-2 px-4 rounded-lg transition-transform hover:scale-105">
-                        + Crear Nueva
+                        + Crear Categoría
                     </Link>
                 </div>
                 <div className="md:hidden bg-blue-50 border-b border-blue-200 px-4 py-2 text-xs text-blue-700 flex items-center gap-2">

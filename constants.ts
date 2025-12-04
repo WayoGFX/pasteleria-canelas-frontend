@@ -5,18 +5,18 @@ export const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME; // nombre de la
 
 export const TESTIMONIALS = [
   {
-    quote: "¡El pastel de chocolate es una obra de arte! Nunca he probado algo tan delicioso y perfectamente equilibrado. Se ha convertido en mi favorito.",
-    author: "Ana López",
+    quote: "Muy buenos pasteles, te dan precios accesibles y no usan mucho el fondan como hacen en otras pastelerías 👌🏿👌🏿👌🏿",
+    author: "Krissia Tobías",
     rating: 5,
   },
   {
-    quote: "La atención es maravillosa y los postres son de otro nivel. El cheesecake de fresa es cremoso y fresco. ¡Totalmente recomendado!",
-    author: "Carlos Mendoza",
+    quote: "Muy buena atención, riquísimos el pan dulce y pasteles.",
+    author: "Guadalupe Vasquez",
     rating: 5,
   },
   {
-    quote: "Cada pan dulce es un viaje a la infancia. Las conchas son increíblemente suaves y esponjosas. Un lugar con auténtico sabor a hogar.",
-    author: "Sofía Ramírez",
+    quote: "Comida: 5/5  |  Servicio: 5/5  |  Ambiente: 5/5",
+    author: "Cesi Estrada",
     rating: 5,
   },
 ];
