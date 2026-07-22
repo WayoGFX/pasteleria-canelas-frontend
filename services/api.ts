@@ -58,8 +58,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 18.00 },
       { size: '12-15 personas', price: 25.00 },
     ],
-    featured: false,
-    seasonal: true,
+    seasonal: false,
   },
   {
     id: 'pastel-diversin',
@@ -71,7 +70,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '10-12 personas', price: 22.00 },
       { size: '20 personas', price: 35.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'rosca-navidea',
@@ -82,7 +81,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: 'Familiar', price: 15.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'semita-alta',
@@ -94,7 +93,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: 'Porción', price: 1.50 },
       { size: 'Entera', price: 8.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'donas-clsicas',
@@ -106,7 +105,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: 'Unidad', price: 0.75 },
       { size: '6 Unidades', price: 4.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-de-vainilla-con-fresas-chocolatadas',
@@ -118,7 +117,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 20.00 },
       { size: '15 personas', price: 28.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-frutal-de-melocotn-y-fresas',
@@ -130,7 +129,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 18.00 },
       { size: '12-15 personas', price: 25.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-de-vainilla-y-frutas-con-caramelo',
@@ -142,7 +141,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 19.00 },
       { size: '12-15 personas', price: 26.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-mocca-y-cerezas',
@@ -154,7 +153,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 21.00 },
       { size: '12-15 personas', price: 29.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-de-quinces',
@@ -165,7 +164,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: '4 Niveles (~50 personas)', price: 95.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'maria-luisa',
@@ -177,7 +176,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: 'Porción', price: 1.25 },
       { size: 'Entera', price: 6.50 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'quesadillas',
@@ -189,7 +188,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: 'Pequeña', price: 2.50 },
       { size: 'Grande', price: 5.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'orejitas',
@@ -200,7 +199,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: 'Paquete 6 uds', price: 2.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-frutal-de-mocca',
@@ -212,7 +211,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 20.00 },
       { size: '12-15 personas', price: 27.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'pastel-explosin-rosa',
@@ -224,7 +223,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 22.00 },
       { size: '12-15 personas', price: 30.00 },
     ],
-    featured: true,
+    seasonal: true,
   },
   {
     id: 'pastel-aesthetic',
@@ -236,7 +235,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: 'Mini (Picnic)', price: 12.00 },
       { size: '8-10 personas', price: 22.00 },
     ],
-    featured: true,
+    seasonal: true,
   },
   {
     id: 'pastel-snoopy-yard',
@@ -247,7 +246,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: '8-10 personas', price: 24.00 },
     ],
-    featured: false,
+    seasonal: false,
   },
   {
     id: 'porcin-de-budn-de-leche-y-pasas',
@@ -258,7 +257,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: 'Porción', price: 2.25 },
     ],
-    featured: false,
+    seasonal: true,
   },
   {
     id: 'pastel-de-galleta',
@@ -269,7 +268,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: '8-10 personas', price: 18.00 },
     ],
-    featured: false,
+    seasonal: true,
   },
   {
     id: 'porcin-de-tres-leches-especialidad',
@@ -280,7 +279,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: 'Porción', price: 3.50 },
     ],
-    featured: true,
+    seasonal: true,
   },
   {
     id: 'tartaleta-de-frutas-frescas',
@@ -292,7 +291,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: 'Individual', price: 3.00 },
       { size: 'Familiar', price: 16.00 },
     ],
-    featured: true,
+    seasonal: true,
   },
   {
     id: 'porcin-de-chocoflan',
@@ -303,7 +302,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: 'Porción', price: 3.00 },
     ],
-    featured: false,
+    seasonal: true,
   },
 ];
 
