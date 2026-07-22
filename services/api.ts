@@ -59,6 +59,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '12-15 personas', price: 25.00 },
     ],
     featured: false,
+    seasonal: true,
   },
   {
     id: 'pastel-diversin',
@@ -223,7 +224,7 @@ export const MOCK_PRODUCTS: Product[] = [
       { size: '8-10 personas', price: 22.00 },
       { size: '12-15 personas', price: 30.00 },
     ],
-    featured: false,
+    featured: true,
   },
   {
     id: 'pastel-aesthetic',
@@ -279,7 +280,7 @@ export const MOCK_PRODUCTS: Product[] = [
     prices: [
       { size: 'Porción', price: 3.50 },
     ],
-    featured: false,
+    featured: true,
   },
   {
     id: 'tartaleta-de-frutas-frescas',
