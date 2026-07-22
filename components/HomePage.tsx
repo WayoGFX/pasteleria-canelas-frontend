@@ -158,7 +158,7 @@ const HomePage: React.FC = () => {
                     </motion.p>
                     
                     <motion.a 
-                        href="/category/postres" 
+                        href="/#/category/postres" 
                         className="mt-8 inline-block bg-white text-text-primary font-bold py-3 px-8 rounded-lg text-lg shadow-md"
                         variants={heroCTA}
                         initial="hidden"
