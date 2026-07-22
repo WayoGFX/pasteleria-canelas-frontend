@@ -145,7 +145,7 @@ const HomePage: React.FC = () => {
                         initial="hidden"
                         animate="visible"
                     >
-                        Arte en cada bocado
+                        Con el mejor sabor
                     </motion.h1>
                     
                     <motion.p 
@@ -154,12 +154,11 @@ const HomePage: React.FC = () => {
                         initial="hidden"
                         animate="visible"
                     >
-                        Hecho a mano, con amor y los mejores ingredientes. 
-                        Descubre el sabor de la verdadera pastelería artesanal.
+                        Disfruta de nuestros riquísimos postres esperando por ti.
                     </motion.p>
                     
                     <motion.a 
-                        href="/" 
+                        href="/category/postres" 
                         className="mt-8 inline-block bg-white text-text-primary font-bold py-3 px-8 rounded-lg text-lg shadow-md"
                         variants={heroCTA}
                         initial="hidden"
